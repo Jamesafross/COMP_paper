@@ -5,7 +5,13 @@ function Kuramoto(dθ,θ,h,p,t)
     for i = 1:N
         d = 0.
         for j = 1:N
-            d += W[i,j]*sin(h(p,t-lags[i,j],idxs=j) - θ[i])
+            if W[i,j] > 0
+                if lags[i,j] > 0
+                    d += W[i,j]*sin(h(p,t-lags[i,j],idxs=j) - θ[i])
+                else
+                    d +=  W[i,j]*sin(θ[j] - θ[i])
+                end
+            end
         end
         dθ[i] = ω + κ*d
     end

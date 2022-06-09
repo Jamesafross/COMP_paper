@@ -1,5 +1,5 @@
 include("./setup.jl")
-const KP = KuramotoParams(ω = 2.,κ=0.1,σ=0.01)
+const KP = KuramotoParams(ω = 2.,κ=0.01,σ=0.01)
 u0 = 0.18randn(N)
 h(p, t; idxs=nothing) = typeof(idxs) <: Number ? 1.0 : u0
 tspan = (0.0,1000.0)

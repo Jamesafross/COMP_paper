@@ -27,4 +27,3 @@ W = zeros(N,N)
 W.=SC
 
 const nP = networkParameters(W, dist,lags, N, minSC,W_sum)
-const KP = KuramotoParams(ω = 2.)
