@@ -47,7 +47,7 @@ for jj = 1:length(Run_vec)
     nP = networkParameters(W, dist,lags, N,minSC,W_sum)
 
     Run = string(Int(round(Run_vec[jj])))
-    nWindows = 40
+    nWindows = 2
     tWindows = 100.0
     stimOpt = setstim
     stimStr = -5.

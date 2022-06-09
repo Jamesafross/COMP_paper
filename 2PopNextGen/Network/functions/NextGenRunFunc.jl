@@ -37,7 +37,7 @@ function NGModelRun(NGp,LR,bP,nP,κS,wS,opts,u0)
          
         end
 
-        if j < 5
+        if j < 2
             opts.adapt = "off"
         else
             opts.adapt = "on"
