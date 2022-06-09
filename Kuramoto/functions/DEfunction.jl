@@ -9,7 +9,7 @@ function Kuramoto(dθ,θ,h,p,t)
                 if lags[i,j] > 0
                     d += W[i,j]*sin(h(p,t-lags[i,j],idxs=j) - θ[i])
                 else
-                    d +=  W[i,j]*sin(θ[j] - θ[i])
+                    d += W[i,j]*sin(θ[j] - θ[i])
                 end
             end
         end
