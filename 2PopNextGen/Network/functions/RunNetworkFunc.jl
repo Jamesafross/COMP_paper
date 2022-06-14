@@ -1,4 +1,5 @@
-function Run_NextGen(numThreads,nWindows,tWindows;plasticity="on",mode="rest",nRuns=1,eta_0E = -14.19,kappa=0.505)
+function Run_NextGen(numThreads,nWindows,tWindows;delay_digits=3,plasticity="on",mode="rest",nRuns=1,eta_0E = -14.19,kappa=0.505)
+    global digits = delay_digits
     workdir = "$(homedir())/COMP_paper/2PopNextGen/Network"
     include("$workdir/setup.jl")
     LinearAlgebra.BLAS.set_num_threads(numThreads)
