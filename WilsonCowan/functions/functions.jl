@@ -1,6 +1,7 @@
 function make_uhist(tgrid,u)
     sizeT = size(tgrid,1)
-    t = tgrid[1]:(tgrid[end]-tgrid[1])/(sizeT -1):tgrid[end]
+
+    t = LinRange(tgrid[1],tgrid[end],size(u,2))
     interp = []
     for i = 1:size(u,1)
         if i == 1
@@ -11,6 +12,7 @@ function make_uhist(tgrid,u)
     end
     return interp
 end
+
 
 function adapt_global_coupling(hparams,N::Int64,W::Matrix{Float64},lags::Matrix{Float64},h,t::Float64,u::Vector{Float64},minSC::Float64,W_sum::Vector{Float64},vP)
     @inbounds for ii = 1:N
@@ -106,6 +108,5 @@ function fitR(modelFC,realFC)
 	end
 	return cor(modelFCLT,realFCLT)
 end
-			
-
+		
 

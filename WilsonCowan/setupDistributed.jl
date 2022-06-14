@@ -15,7 +15,7 @@ end
     include("../Balloon_Model/parameter_sets.jl")
     include("functions/Structures.jl")
     include("functions/DEfunctions.jl")
-    include("functions/modelFunc.jl")
+    include("functions/RunWilsonCowanFunc.jl")
     HOMEDIR=homedir()
     WORKDIR="$HOMEDIR/NetworkModels/WilsonCowan_Distributed"
     InDATADIR="$HOMEDIR/NetworkModels/StructDistMatrices"

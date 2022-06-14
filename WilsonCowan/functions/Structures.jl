@@ -53,7 +53,13 @@ mutable struct variousPars
     timeAdapt::Real
 end
 
-	
+
+mutable struct modelOpts
+    stimOpt::String
+    adapt::String
+end
+
+
 mutable struct solverOpts
     stimOpt::String
     stimWindow::Real
@@ -64,3 +70,7 @@ mutable struct solverOpts
     nWindows::Real
     ISP::String
 end
+
+
+
+	

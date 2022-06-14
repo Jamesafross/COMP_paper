@@ -3,9 +3,8 @@
 # solver                        #
 #################################
 function NextGen(du,u,h,p,t)
-    NGp,LR,nP,vP,aP,κS,wS,hparams,nWindow,opts = p
-    
-
+    hparams = p
+   
 
     @unpack ΔE,ΔI,η_0E,η_0I,τE,τI,αEE,αIE,αEI,αII,κSEE,κSIE,κSEI,
     κSII,κVEE,κVIE,κVEI,κVII,VsynEE,VsynIE,VsynEI,VsynII,κ = NGp
@@ -15,19 +14,10 @@ function NextGen(du,u,h,p,t)
     @unpack W,dist,lags,N,minSC,W_sum = nP
     @unpack tP,HIST = aP 
      
+    makeHistMat!(HISTMAT,h,u,hparams,N,lags,t)
+    make_d!(d,W,u,HISTMAT)
     @inbounds for i = 1:N
-        d = 0.0
-
-        @inbounds for j = 1:N
-            if W[j,i] != 0.
-                if lags[j,i] == 0.
-                    d  += W[j,i]*u[j]   
-                else
-                    d += W[j,i]*h(hparams,t-lags[j,i]; idxs=j)
-                end
-            end
-
-        end
+       
 
         rE=u[i]
         rI=u[i+N]
@@ -39,6 +29,7 @@ function NextGen(du,u,h,p,t)
         gII=u[i+7N]
 
         if  t >= tP && adapt == "on"
+            
             #println(t)
         #  aP.HIST = hcat(aP.HIST,u[1:N])
         # if size(aP.HIST,2) > 100
@@ -48,12 +39,13 @@ function NextGen(du,u,h,p,t)
         if i == N
             
             if mod(vP.count,10) == 0
-                wS.κSEEv = cat(wS.κSEEv,κS.κSEEv,dims=2)
-                wS.κSIEv = cat(wS.κSIEv,κS.κSIEv,dims=2)
-                wS.κSEIv = cat(wS.κSEIv,κS.κSEIv,dims=2)
-                wS.κSIIv = cat(wS.κSIIv,κS.κSIIv,dims=2)
+                wS.κSEEv[:,wS.count] = κS.κSEEv
+                wS.κSIEv[:,wS.count] = κS.κSIEv
+                wS.κSEIv[:,wS.count] = κS.κSEIv
+                wS.κSIIv[:,wS.count] = κS.κSIIv
+                wS.count += 1
             end
-            nP.W = adapt_global_coupling(hparams,N,W,lags,h,t,u,minSC,W_sum)
+            #nP.W = adapt_global_coupling(hparams,N,W,lags,h,t,u,minSC,W_sum)
             aP.tP += 0.01  
             aP.tP = round(aP.tP,digits=2)
             vP.count += 1
@@ -71,7 +63,7 @@ function NextGen(du,u,h,p,t)
         #vI
         du[i+3N] =(1. /τI)*(gIE*(VsynIE - vE) + gII*(VsynII - vI) + κVIE*(vE - vI) - (τI^2)*(pi^2)* (rI^2.) + vI^2. + η_0I)
         #gEE
-        du[i+4N] = αEE * (-gEE + κ*d + κSEEv[i]*rE)
+        du[i+4N] = αEE * (-gEE + κ*d[i] + κSEEv[i]*rE)
         #gIE
         du[i+5N] = αIE * (-gIE + κSIEv[i] * rE)
         #gEI
@@ -88,7 +80,7 @@ function NextGen(du,u,h,p,t)
     NGp,nP,hparams= p
     ΔE,ΔI,η_0E,η_0I,τE,τI,αEE,αIE,αEI,αII,κSEE,κSIE,κSEI,
     κSII,κVEE,κVIE,κVEI,κVII,VsynEE,VsynIE,VsynEI,VsynII,κ = NGp
- 
+  
     W,lags,N = nP
   
  

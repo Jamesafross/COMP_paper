@@ -14,3 +14,11 @@ end
     σ::R = 0.001
 end
 
+mutable struct solverOpts
+    tWindows::Real
+    nWindows::Real
+end
+
+mutable struct Init
+    u0
+end

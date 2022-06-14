@@ -1,23 +1,35 @@
 include("./setup.jl")
-const KP = KuramotoParams(ω = 2.,κ=-0.05,σ=0.01)
-u0 = 0.18randn(N)
-h(p, t; idxs=nothing) = typeof(idxs) <: Number ? 1.0 : u0
-tspan = (0.0,1000.0)
-p = []
-prob = SDDEProblem(Kuramoto,dW,u0, h, tspan, p)
-sol = solve(prob,EM(),dt=0.01,maxiters = 1e20)
 
-sol = cos.(sol[:,end-500:end])
+ 
 
+nTrials = 10
+BOLD_OUT = zeros(N,size_out*nWindows)
+BOLD_TRIAL_MEAN = zeros(N,size_out*nWindows)
 
+for n = 1:nTrials
+    IC.u0 = 0.18randn(N)
+    
+    out = KuramotoRun()
 
-
-R = zeros(N,N)
-for i = 1:N
-    for j = i:N
-        R[i,j] = cor(sol[i,:],sol[j,:])
-        R[j,i] = R[i,j]
+    for ii = 1:nWindows
+        BOLD_OUT[:,1+size_out*(ii-1):ii*size_out]= out[:,:,ii] 
     end
+
+    BOLD_TRIAL_MEAN += BOLD_OUT/nTrials
+
+    
 end
+
+
+
+
+savedir = "Run_1"
+
+
+save("$OutDATADIR/$savedir/BOLD_Kuramoto.jld","BOLD_Kuramoto",BOLD_TRIAL_MEAN)
+
+
+
+
 
 
