@@ -17,9 +17,9 @@ function Run_NextGen(numThreads,nWindows,tWindows;plasticity="on",mode="rest",nR
     end
 
     if plasticity==lowercase("on") 
-        opts.adapt="on"
+        opts.plasticity="on"
     else
-        opts.adapt="off"
+        opts.plasticity="off"
     end
     
 
