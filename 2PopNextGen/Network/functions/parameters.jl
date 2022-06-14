@@ -80,6 +80,7 @@ mutable struct solverOpts
     stimNodes::Vector{Real}
     stimStr::Real
     Tstim::Vector{Real}
+    plasticity::String
     adapt::String
     synapses::String
     tWindows::Real

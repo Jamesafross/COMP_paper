@@ -30,10 +30,12 @@ function NGModelRun(κS,wS,startAdapt)
             aP.tP = 0.01
         end
 
-        if j < start_adapt
-            opts.adapt = "off"
-        else
-            opts.adapt = "on"
+        if opts.plasticity == "on"
+            if j < start_adapt
+                opts.adapt = "off"
+            else
+                opts.adapt = "on"
+            end
         end
        
         tspan = (0.0,tWindows)

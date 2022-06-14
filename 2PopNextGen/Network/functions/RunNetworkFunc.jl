@@ -1,4 +1,4 @@
-function Run_NextGen(numThreads,nWindows,tWindows;nRuns=1,eta_0E = -14.19,kappa=0.505)
+function Run_NextGen(numThreads,nWindows,tWindows;plasticity="on",mode="rest",nRuns=1,eta_0E = -14.19,kappa=0.505)
     workdir = "$(homedir())/COMP_paper/2PopNextGen/Network"
     include("$workdir/setup.jl")
     LinearAlgebra.BLAS.set_num_threads(numThreads)
@@ -8,6 +8,22 @@ function Run_NextGen(numThreads,nWindows,tWindows;nRuns=1,eta_0E = -14.19,kappa=
     opts.nWindows=nWindows
     opts.tWindows=tWindows
 
+    if mode == lowercase("rest")
+        ss = ["off"]
+    elseif mode == lowercase("rest+stim")
+        ss=["off","on"]
+    elseif mode == lowercase("stim")
+        ss=["on"]
+    end
+
+    if plasticity==lowercase("on") 
+        opts.adapt="on"
+    else
+        opts.adapt="off"
+    end
+    
+
+
 
 
     Run_vec = LinRange(1,nRuns,nRuns)
@@ -16,7 +32,7 @@ function Run_NextGen(numThreads,nWindows,tWindows;nRuns=1,eta_0E = -14.19,kappa=
     
         IC.u0 = makeInitConds(NGp,N)  + 0.1*rand(8N)
 
-        for setstim = ["on","off"]
+        for setstim in ss
             Run = string(Int(round(Run_vec[jj])))
             nP.W .= SC
             κS.κSEEv = ones(N)*NGp.κSEE
