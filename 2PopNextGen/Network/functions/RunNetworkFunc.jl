@@ -1,59 +1,32 @@
-function Run_NextGen(numThreads,nWindows,tWindows;delay_digits=3,plasticity="on",mode="rest",nRuns=1,eta_0E = -14.19,kappa=0.505)
-    global digits = delay_digits
-    workdir = "$(homedir())/COMP_paper/2PopNextGen/Network"
-    include("$workdir/setup.jl")
-    LinearAlgebra.BLAS.set_num_threads(numThreads)
-
-    NGp.η_0E = eta_0E
-    NGp.κ = kappa
-    opts.nWindows=nWindows
-    opts.tWindows=tWindows
-
-    if mode == lowercase("rest")
-        ss = ["off"]
-    elseif mode == lowercase("rest+stim")
-        ss=["off","on"]
-    elseif mode == lowercase("stim")
-        ss=["on"]
-    end
-
-    if plasticity==lowercase("on") 
-        opts.plasticity="on"
-    else
-        opts.plasticity="off"
-    end
+function Run_NextGen()
     
-
-
-
-
     Run_vec = LinRange(1,nRuns,nRuns)
 
     for jj = 1:length(Run_vec)
     
-        IC.u0 = makeInitConds(NGp,N)  + 0.1*rand(8N)
+        IC.u0 = makeInitConds(NGp,nP.N)  + 0.1*rand(8*nP.N)
 
         for setstim in ss
             Run = string(Int(round(Run_vec[jj])))
             nP.W .= SC
-            κS.κSEEv = ones(N)*NGp.κSEE
-            κS.κSIEv = ones(N)*NGp.κSIE
-            κS.κSEIv = ones(N)*NGp.κSEI
-            κS.κSIIv = ones(N)*NGp.κSII
-            κS.κSUM = κSEEv[1]+κSIEv[1]+κSEIv[1]+κSIIv[1]
+            κS.κSEEv = ones(nP.N)*NGp.κSEE
+            κS.κSIEv = ones(nP.N)*NGp.κSIE
+            κS.κSEIv = ones(nP.N)*NGp.κSEI
+            κS.κSIIv = ones(nP.N)*NGp.κSII
+            κS.κSUM = κS.κSEEv[1]+κS.κSIEv[1]+κS.κSEIv[1]+κS.κSIIv[1]
             IC.u0 = init0
             
             
-            wS.κSEEv[:,1] = κSEEv
-            wS.κSIEv[:,1] = κSIEv
-            wS.κSEIv[:,1] = κSEIv
-            wS.κSIIv[:,1] = κSIIv
+            wS.κSEEv[:,1] = κS.κSEEv
+            wS.κSIEv[:,1] = κS.κSIEv
+            wS.κSEIv[:,1] = κS.κSEIv
+            wS.κSIIv[:,1] = κS.κSIIv
             wS.count = 2
             
             global opts.stimOpt = setstim
 
             println("Running model ... ")
-            @time out,weightSaved = NGModelRun(κS,wS,start_adapt)
+            @time out,weightSaved = NGModelRun(timer)
 
             BOLD_OUT=[]
             for ii = 1:opts.nWindows
@@ -74,12 +47,12 @@ function Run_NextGen(numThreads,nWindows,tWindows;delay_digits=3,plasticity="on"
             
             run = "_Run_$Run_vec[jj]"
             kappa = "_kappa=$(NGp.κ)"
-            etaE = "etaE=$(NGp.η_E0)"
+            etaE = "etaE=$(NGp.η_0E)"
             savename = save1*run*kappa*etaE
             dir0 = "LR_"
             dir1 = string(LR)
             dir2 = "_StimStr_"
-            dir3 = string(stimStr)
+            dir3 = string(opts.stimStr)
 
             savedir = dir0*dir1*dir2*dir3
 

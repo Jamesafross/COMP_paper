@@ -4,8 +4,6 @@
 #################################
 function NextGen(du,u,h,p,t)
     hparams = p
-   
-
     @unpack ΔE,ΔI,η_0E,η_0I,τE,τI,αEE,αIE,αEI,αII,κSEE,κSIE,κSEI,
     κSII,κVEE,κVIE,κVEI,κVII,VsynEE,VsynIE,VsynEI,VsynII,κ = NGp
     @unpack κSEEv,κSIEv,κSEIv,κSIIv,κSUM = κS
@@ -13,9 +11,9 @@ function NextGen(du,u,h,p,t)
     @unpack stimOpt,stimWindow,stimNodes,stimStr,Tstim,adapt,synapses,tWindows,nWindows = opts
     @unpack W,dist,lags,N,minSC,W_sum = nP
     @unpack tP,HIST = aP 
-     
+
     makeHistMat!(HISTMAT,h,u,hparams,N,lags,t)
-    make_d!(d,W,u,HISTMAT)
+    make_d!(d,W,HISTMAT)
     @inbounds for i = 1:N
        
 
@@ -29,16 +27,13 @@ function NextGen(du,u,h,p,t)
         gII=u[i+7N]
 
         if  t >= tP && adapt == "on"
+        
             
-            #println(t)
-        #  aP.HIST = hcat(aP.HIST,u[1:N])
-        # if size(aP.HIST,2) > 100
-        #    aP.HIST = aP.HIST[:, 1:end .!= 1]
-        #end
         κS.κSEEv[i],κS.κSIEv[i],κS.κSEIv[i],κS.κSIIv[i] = adapt_local_func(h,hparams,t,κS,NGp,rE,rI,i,N,LR)
         if i == N
             
             if mod(vP.count,10) == 0
+                
                 wS.κSEEv[:,wS.count] = κS.κSEEv
                 wS.κSIEv[:,wS.count] = κS.κSIEv
                 wS.κSEIv[:,wS.count] = κS.κSEIv

@@ -158,3 +158,11 @@ end
  mutable struct init
     u0
  end
+
+ mutable struct Timer
+    meanIntegrationTime
+    meanBalloonTime
+    meanAllTime
+ end
+
+ 

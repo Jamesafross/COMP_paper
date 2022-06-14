@@ -1,6 +1,10 @@
-function NGModelRun(κS,wS,startAdapt)
+function NGModelRun(timer)
    @unpack W, dist,lags,N,minSC,W_sum = nP
    @unpack stimOpt,stimWindow,stimNodes,stimStr,Tstim,adapt,synapses,tWindows,nWindows = opts
+   println(NGp.η_0E)
+    
+
+
     
     R = zeros(N,N,nWindows)
     Wsave = zeros(N,N,nWindows)
@@ -9,6 +13,7 @@ function NGModelRun(κS,wS,startAdapt)
     BOLD_out = zeros(N,size_out,nWindows)
        
     for j = 1:nWindows
+        
         global nWindow = j
        
          
@@ -32,9 +37,9 @@ function NGModelRun(κS,wS,startAdapt)
 
         if opts.plasticity == "on"
             if j < start_adapt
-                opts.adapt = "off"
+                global opts.adapt = "off"
             else
-                opts.adapt = "on"
+                global opts.adapt = "on"
             end
         end
        
@@ -50,13 +55,17 @@ function NGModelRun(κS,wS,startAdapt)
         elseif opts.synapses == "2ndOrder"
             probDDE = NextGen2ndOrderSynapses
         end
-
+        println(opts.plasticity)
         if j == 1
             prob = DDEProblem(probDDE,IC.u0, h1, tspan, p)
-            @time global sol = solve(prob,MethodOfSteps(BS3()),maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
+            
+            global sol = solve(prob,MethodOfSteps(BS3()),maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
+          
         else
             prob = DDEProblem(probDDE,IC.u0, h2, tspan, p)
-            @time global sol = solve(prob,MethodOfSteps(BS3()),maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
+            tic1 = time()
+            global sol = solve(prob,MethodOfSteps(BS3()),maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
+            global timer.meanIntegrationTime += (time() - tic1)/(nWindows-1)
         end
         vE = sol[2N+1:3N,:]
         vI = sol[3N+1:4N,:]

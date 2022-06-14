@@ -295,7 +295,7 @@ function makeHistMat!(HistMat::Array{Float64},h,u,hparams,N,lags::Array{Float64}
     end
 end
 
-function make_d!(d,W,u,HistMat)
+function make_d!(d::Vector{Float64},W::Matrix{Float64},HistMat::Matrix{Float64})
     d .= sum(W.*HistMat,dims=2)
 end
         

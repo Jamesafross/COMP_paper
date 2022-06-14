@@ -8,27 +8,16 @@ using LinearAlgebra,Plots,StochasticDelayDiffEq,Parameters,Statistics,StatsBase,
     include("functions/DEfunctions.jl")
     include("functions/RunWilsonCowanFunc.jl")
     HOMEDIR=homedir()
-    WORKDIR="$HOMEDIR/NetworkModels/WilsonCowan_Distributed"
+    WORKDIR="$HOMEDIR/COMP_paper/WilsonCowan_Distributed"
     InDATADIR="$HOMEDIR/NetworkModels_Data/StructDistMatrices"
     include("$InDATADIR/getData.jl")
+    include("$HOMEDIR/COMP_paper/global_functions/headers.jl")
     #load data and make struct & dist matrices
-    c=7000.
-    SC_Array,FC_Array,dist = getData_nonaveraged(;SCtype="log")
-    FC_Array = FC_Array
-    PaulFCmean = mean(FC_Array,dims=3)
-    SC = 0.01*SC_Array[:,:,1]
-    lags = dist./c
-    lags = round.(lags,digits=3) 
-    lags[lags.<0.003] .= 0.000
-    #lags[SC .< 0.018] .= 0  
-    minSC,W_sum=getMinSC_and_Wsum(SC)
-    N = size(SC,1)
-    W = zeros(N,N)
-    W.=SC
+   
 
     stimOpt = "off"
     stimWindow = 2
-    stimNodes = [37]
+    stimNodes = [39]
     Tstim = [30,60]
     adapt = "off"
     const tWindows = 300.
