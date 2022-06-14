@@ -1,7 +1,3 @@
-
-
-
-
 function setup(numThreads,nWindows,tWindows;plasticityOpt="on",mode="rest",n_Runs=1,eta_0E = -14.19,kappa=0.505)
 
     plot_fit = "false"

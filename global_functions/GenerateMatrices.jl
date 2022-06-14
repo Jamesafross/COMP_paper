@@ -1,4 +1,4 @@
-function genSC(N;density=1)
+function generate_network_matrices(N;density=1)
     W=ones(N,N)
     W=W.-diagm(ones(N))
     triSize = (N^2 - N)/2

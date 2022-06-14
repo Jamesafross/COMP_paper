@@ -12,8 +12,8 @@ function NextGen(du,u,h,p,t)
     @unpack W,dist,lags,N,minSC,W_sum = nP
     @unpack tP,HIST = aP 
 
-    makeHistMat!(HISTMAT,h,u,hparams,N,lags,t)
-    make_d!(d,W,HISTMAT)
+    make_hist_mat!(h,u,hparams,N,lags,t,HISTMAT)
+    make_d!(W,HISTMAT,d)
     @inbounds for i = 1:N
        
 

@@ -1,6 +1,0 @@
-include("DEfunctions.jl")
-include("WindowsRunFunc.jl")
-include("parameters.jl")
-include("stability.jl")
-include("functions.jl")
-include("generate_matrices.jl")

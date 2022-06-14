@@ -1,0 +1,7 @@
+include("DEfunctions.jl")
+include("WindowsRunFunc.jl")
+include("Parameters.jl")
+include("Stability.jl")
+include("Functions.jl")
+include("Setup.jl")
+include("RunNetworkFunc.jl")

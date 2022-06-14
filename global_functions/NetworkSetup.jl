@@ -1,4 +1,4 @@
-function NetworkSetup(;digits=3,type_SC="paulData",N=2,density=1)
+function networksetup(;digits=3,type_SC="paulData",N=2,density=1)
     c=7000.
     if lowercase(type_SC) == lowercase("paulData")
         SC_Array,FC_Array,dist = getData_nonaveraged(;SCtype="log")
@@ -13,7 +13,7 @@ function NetworkSetup(;digits=3,type_SC="paulData",N=2,density=1)
         N = size(SC,1)
     elseif lowercase(type_SC) == lowercase("generated")
         
-        SC,lags = genSC(N;density=density)
+        SC,lags = generate_network_matrices(N;density=density)
         
         dist = lags
         minSC,W_sum=getMinSC_and_Wsum(SC)

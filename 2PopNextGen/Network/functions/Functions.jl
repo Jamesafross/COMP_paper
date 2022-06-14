@@ -1,4 +1,4 @@
-function fitR(modelFC,realFC)
+function fit_r(modelFC,realFC)
     N = size(modelFC,1)
     modelFCLT = zeros(Int((N^2-N)/2))
     realFCLT = zeros(Int((N^2-N)/2))
@@ -67,42 +67,8 @@ function adapt_global_coupling(hparams,N::Int64,W::Matrix{Float64},lags::Matrix{
 
 end
 
-function rij(cij,bsdp)
-    return (cij + 1.0)^bsdp
-end
-
-function hill(x::Float64,hsdp::Float64,bsdp::Float64)
-    return x/(x+hsdp^bsdp) - 1/2
-end
 
 
-function modHeaviside(x)
-    if x < 0.0
-        return 1.0
-    else
-        return -1.0
-    end
-end
-
-function ΔWsdp(cij::Float64,hsdp::Float64,bsdp::Float64)
-    return 0.0001*hill(rij(cij,bsdp),hsdp,bsdp)
-end
-
-function ΔWgtp(w,dist,cij,agdp,ηgdp)
-    return agdp*modHeaviside(w - exp(cij*dist))*ηgdp
-end
-
-function getHistMat(HISTMAT,h,u,hparams,lags,t,N)
-    for i = 1:N
-        for j = 1:N
-            if lags[i,j] > 0
-                HISTMAT[i,j] = h(hparams,t-lags[i,j];idxs=j)#
-            else
-                HISTMAT[i,j] = u[j]
-            end
-        end
-    end
-end
 
 
 function adapt_local_func(h,hparams,t,κS,NGp,rE,rI,i,N,c;type = "lim")
@@ -153,40 +119,7 @@ end
 
 
 
-function adapt_global_coupling_cor(N::Int64,W::Matrix{Float64},dist::Matrix{Float64},minSC::Float64,W_sum::Vector{Float64},HIST::Array{Float64},hsdp,bsdp)
-  
-    @inbounds for ii = 1:N
-        
-        @inbounds for jj = 1:N 
-            if W[jj,ii]  > 0.0
-                cij = cor(HIST[ii,:],HIST[jj,:])
-                W[jj,ii] += ΔWsdp(cij,hsdp,bsdp)
-                if W[jj,ii] < minSC
-                    W[jj,ii] = minSC
-                elseif W[jj,ii] > 0.12
-                    W[jj,ii] = 0.12
-                end
-            end
-        
-        end
-       
-        if sum(W[:,ii]) != 0.0
-        @views W[:,ii] = W_sum[ii].*(W[:,ii]./sum(W[:,ii]))
-        end
-        W[W .< 0.0] .= 0.0
 
-    end
-
-     @inbounds for k=1:N #Maintaining symmetry in the weights between regions
-        @inbounds for l = k:N
-                 W[k,l] = (W[k,l]+W[l,k])/2
-                 W[l,k] = W[k,l]
-        end
-    end
-
-    return W
-
-end
 
 function h1(hparams,t;idxs = nothing)
     #history function used on first window
@@ -225,7 +158,7 @@ function normalise(W,N)
 end
 
 
-function makeInitConds(NGp,N)
+function make_init_conds(NGp,N)
     @unpack ΔE,ΔI,η_0E,η_0I,τE,τI,αEE,αIE,αEI,αII,κSEE,κSIE,κSEI,
     κSII,κVEE,κVIE,κVEI,κVII,VsynEE,VsynIE,VsynEI,VsynII,κ = NGp
     
@@ -259,7 +192,7 @@ function stim(t,i,stimNodes,Tstim,nWindow,stimOpt,stimWindow,stimStr)
     end
 end
 
-function findBestFit(R,FC_Array)
+function find_best_fit(R,FC_Array)
     fitRvec = zeros(size(FC_Array,3))
     for i = 1:size(FC_Array,3);
         fitRvec[i] = fitR(R,FC_Array[:,:,i]);
@@ -282,8 +215,10 @@ function findBestFit(R,FC_Array)
     return fit,bestElements
     
 end
+
+
         
-function makeHistMat!(HistMat::Array{Float64},h,u,hparams,N,lags::Array{Float64},t::Float64)
+function make_hist_mat!(h,u::Vector{Float64},hparams,N::Real,lags::Array{Float64},t::Float64,HistMat::Array{Float64},)
     for i = 1:N
         for j = 1:N
             if lags[i,j] > 0.0
@@ -295,7 +230,7 @@ function makeHistMat!(HistMat::Array{Float64},h,u,hparams,N,lags::Array{Float64}
     end
 end
 
-function make_d!(d::Vector{Float64},W::Matrix{Float64},HistMat::Matrix{Float64})
+function make_d!(W::Matrix{Float64},HistMat::Matrix{Float64},d::Vector{Float64})
     d .= sum(W.*HistMat,dims=2)
 end
         
