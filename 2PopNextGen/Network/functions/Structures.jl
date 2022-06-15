@@ -75,6 +75,7 @@ end
 
 
 mutable struct solverOpts
+    delays::String
     stimOpt::String
     stimWindow::Real
     stimNodes::Vector{Real}

@@ -179,20 +179,18 @@ end
 
 
         
-function make_hist_mat!(h,u::Vector{Float64},hparams,N::Real,lags::Array{Float64},t::Float64,HistMat::Array{Float64},)
-    for i = 1:N
-        for j = 1:N
-            if lags[i,j] > 0.0
-                HistMat[i,j] = h(hparams,t-lags[j,i]; idxs=j)
-            else
-                HistMat[i,j] = u[j]
+function make_hist_mat!(h,W,u::Vector{Float64},hparams,N::Real,lags::Array{Float64},t::Float64,WHistMat::Array{Float64},non_zero_weights)
+        @inbounds Threads.@threads for i in non_zero_weights
+                    WHistMat[i] = W[i]*h(hparams,t-lags[i]; idxs=i[2])
             end
-        end
-    end
 end
 
 function make_d!(W::Matrix{Float64},HistMat::Matrix{Float64},d::Vector{Float64})
     d .= sum(W.*HistMat,dims=2)
+end
+
+function find_non_zero_weights(W)
+    return findall(W .> 0.0)
 end
         
 

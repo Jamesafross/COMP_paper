@@ -40,23 +40,38 @@ function nextgen_model_windows_run()
         tspan = (0.0,tWindows)
         adpStops = collect(0.01:0.01:tWindows)
         clags = cat(unique(reshape(lags[lags.>0.0],length(lags[lags.>0.0]))),1.0,dims=1)
-        println(clags)
-    
-        global p = hparams
 
-        if opts.synapses == "1stOrder"
-            probDDE = NextGen
-        elseif opts.synapses == "2ndOrder"
-            probDDE = NextGen2ndOrderSynapses
+    
+        
+
+        if lowercase(opts.delays) == "on"
+            probDDE = nextgen
+        elseif lowercase(opts.delays) == "off"
+            probDDE = nextgen_nodelay
         end
-        println(opts.plasticity)
+
         if j == 1
-            prob = DDEProblem(probDDE,IC.u0, h1, tspan, p)
-            global sol = solve(prob,MethodOfSteps(BS3()),maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
+            if lowercase(opts.delays) == "on"
+                p = hparams
+                alg = MethodOfSteps(BS3())
+                prob = DDEProblem(probDDE,IC.u0, h1, tspan, p)
+            elseif lowercase(opts.delays)=="off"
+                alg = BS3()
+                prob = ODEProblem(probDDE,IC.u0, tspan)
+            end
+
+            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
         else
-            prob = DDEProblem(probDDE,IC.u0, h2, tspan, p)
+            if lowercase(opts.delays) == "on"
+                p = hparams
+                alg = MethodOfSteps(BS3())
+                prob = DDEProblem(probDDE,IC.u0, h2, tspan, p)
+            elseif lowercase(opts.delays)=="off"
+                alg = BS3()
+                prob = ODEProblem(probDDE,IC.u0, tspan)
+            end
             tic1 = time()
-            global sol = solve(prob,MethodOfSteps(BS3()),maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
+            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
             global timer.meanIntegrationTime += (time() - tic1)/(nWindows-1)
         end
         vE = sol[2N+1:3N,:]

@@ -1,4 +1,4 @@
-function setup(numThreads,nWindows,tWindows;plasticityOpt="on",mode="rest",n_Runs=1,eta_0E = -14.19,kappa=0.505)
+function setup(numThreads,nWindows,tWindows;delays="on",plasticityOpt="on",mode="rest",n_Runs=1,eta_0E = -14.19,kappa=0.505)
 
     plot_fit = "false"
     save_data = "true"
@@ -48,18 +48,37 @@ function setup(numThreads,nWindows,tWindows;plasticityOpt="on",mode="rest",n_Run
     IC =  init(init0)
     κS = weights(κSEEv, κSIEv, κSEIv, κSIIv, κSUM )
     wS = weightSave(zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),1)
-    opts=solverOpts(stimOpt,stimWindow,stimNodes,stimStr,Tstim,plasticity,adapt,synapses,tWindows,nWindows)
+    opts=solverOpts(delays,stimOpt,stimWindow,stimNodes,stimStr,Tstim,plasticity,adapt,synapses,tWindows,nWindows)
     vP = variousPars(0.0, 100.0,0)
     aP = adaptParams(10.01,IC.u0[1:N])
-    HISTMAT = zeros(N,N)
+    WHISTMAT = zeros(N,N)
     d = zeros(N)
     nRuns = n_Runs
+    ONES = ones(N)
+    non_zero_weights = find_non_zero_weights(W)
+
 
     
 
     timer = Timer(0.,0.,0.)
 
-    return plot_fit,save_data,ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,HISTMAT,d,nRuns,timer
+    if lowercase(delays) == "on"
+        deStr="delays"
+    elseif lowercase(delays) == "off"
+        deStr="no delays"
+    end
+
+    if lowercase(plasticity) == "on"
+        pStr="plasticity"
+    elseif lowercase(plasticity) == "off"
+        pStr="plasticity"
+    end
+
+
+
+    println("Running Next-Gen model with ",deStr," and ",pStr," starting at Window ",start_adapt,".")
+
+    return plot_fit,save_data,ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights
 
 end
 

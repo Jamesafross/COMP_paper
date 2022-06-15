@@ -12,23 +12,26 @@ include("$InDATADIR/getData.jl")
 
 
 
-numThreads = 8
-nWindows = 4
+
+numThreads = 6
+
+nWindows = 5
 tWindows = 100
 type_SC = "generated"
-size_SC = 80
+size_SC =80
 delay_digits=3
 plasticityOpt="off"
 mode="rest"
 n_Runs=1
 eta_0E = -14.19
 kappa = 0.505
+delays = "on"
+const multi_thread = "on"
 
 const SC,dist,lags,N,minSC,W_sum = networksetup(;digits=delay_digits,type_SC=type_SC,N=size_SC,density =0.5)
 
 
-const plot_fit,save_data,ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,HISTMAT,d,nRuns,timer =
-setup(numThreads,nWindows,tWindows;plasticityOpt=plasticityOpt)
-
+const plot_fit,save_data,ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights =
+setup(numThreads,nWindows,tWindows;delays=delays,plasticityOpt=plasticityOpt)
 
 run_nextgen()

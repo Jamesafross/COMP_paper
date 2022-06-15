@@ -1,5 +1,25 @@
 include("./setup.jl")
 
+
+numThreads = 6
+nWindows = 10
+tWindows = 100
+type_SC = "generated"
+size_SC =150
+delay_digits=3
+plasticityOpt="off"
+mode="rest"
+n_Runs=1
+eta_0E = -14.19
+kappa = 0.505
+delays = "on"
+
+const SC,dist,lags,N,minSC,W_sum = networksetup(;digits=delay_digits,type_SC=type_SC,N=size_SC,density =0.5)
+
+W = zeros(N,N)
+W.=SC
+const nP = networkParameters(W, dist,lags, N, minSC,W_sum)
+
  
 
 nTrials = 10
