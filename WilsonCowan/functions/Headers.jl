@@ -1,0 +1,6 @@
+include("DEfunctions.jl")
+include("functions.jl")
+include("Structures.jl")
+include("WindowsRunFunc.jl")
+include("WCSetup.jl")
+include("WCRunNetworkFunc.jl")

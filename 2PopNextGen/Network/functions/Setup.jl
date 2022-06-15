@@ -19,8 +19,6 @@ function setup(numThreads,nWindows,tWindows;plasticityOpt="on",mode="rest",n_Run
     Tstim = [60,90]
 
     #load data and make struct & dist matrices
-    nWindows = 10
-    tWindows = 100.0
     stimOpt = "off"
     stimStr = -5.
     stimWindow = 20
@@ -30,7 +28,11 @@ function setup(numThreads,nWindows,tWindows;plasticityOpt="on",mode="rest",n_Run
 
     NGp = NextGen2PopParams2()
     start_adapt = 5
-    nSave = Int((nWindows-(start_adapt-1))*10*tWindows) + 2
+    if lowercase(plasticity) == lowercase("on")
+        nSave = Int((nWindows-(start_adapt-1))*10*tWindows) + 2
+    else 
+        nSave = 2
+    end
     
     κSEEv = ones(N)*NGp.κSEE
     κSIEv = ones(N)*NGp.κSIE
@@ -38,7 +40,7 @@ function setup(numThreads,nWindows,tWindows;plasticityOpt="on",mode="rest",n_Run
     κSIIv = ones(N)*NGp.κSII
     κSUM = κSEEv[1]+κSIEv[1]+κSEIv[1]+κSIIv[1]
 
-    init0 = makeInitConds(NGp,N)  + 0.1*rand(8N)
+    init0 = make_init_conds(NGp,N)  + 0.1*rand(8N)
 
     nP = networkParameters(W, dist,lags, N, minSC,W_sum)
     bP = ballonModelParameters()
@@ -57,7 +59,7 @@ function setup(numThreads,nWindows,tWindows;plasticityOpt="on",mode="rest",n_Run
 
     timer = Timer(0.,0.,0.)
 
-    return plot_fit,save_data,NGp,start_adapt,init0,nP,bP,LR,IC,κS,wS,opts,vP,aP,HISTMAT,d,nRuns,timer
+    return plot_fit,save_data,ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,HISTMAT,d,nRuns,timer
 
 end
 

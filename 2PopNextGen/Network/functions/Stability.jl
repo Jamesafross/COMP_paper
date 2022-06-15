@@ -25,7 +25,7 @@ function f(F, x, p)
 
 end
 
-function SteadyState(p)
+function steadystate(p)
     κSEE,κSIE,κSEI,κSII,
     αEE,αIE,αEI,αII,
     κVEE,κVIE,κVEI,κVII,
@@ -47,12 +47,12 @@ end
 
 
 
-function init_conds_SS(p)
+function init_conds_ss(p)
     κSEE,κSIE,κSEI,κSII,
     αEE,αIE,αEI,αII,
     κVEE,κVIE,κVEI,κVII,
     VsynEE,VsynIE,VsynEI,VsynII,ΔE,ΔI,η_0E,η_0I,τE,τI= p
-    x = SteadyState(p)
+    x = steadystate(p)
     rE  = x[1]
     rI  = x[2]
     vE  = x[3]

@@ -1,13 +1,7 @@
-function NGModelRun(timer)
+function nextgen_model_windows_run()
    @unpack W, dist,lags,N,minSC,W_sum = nP
    @unpack stimOpt,stimWindow,stimNodes,stimStr,Tstim,adapt,synapses,tWindows,nWindows = opts
-   println(NGp.η_0E)
     
-
-
-    
-    R = zeros(N,N,nWindows)
-    Wsave = zeros(N,N,nWindows)
     BOLD_saveat = collect(0:1.6:tWindows)
     size_out = length(BOLD_saveat)
     BOLD_out = zeros(N,size_out,nWindows)
@@ -58,9 +52,7 @@ function NGModelRun(timer)
         println(opts.plasticity)
         if j == 1
             prob = DDEProblem(probDDE,IC.u0, h1, tspan, p)
-            
             global sol = solve(prob,MethodOfSteps(BS3()),maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
-          
         else
             prob = DDEProblem(probDDE,IC.u0, h2, tspan, p)
             tic1 = time()

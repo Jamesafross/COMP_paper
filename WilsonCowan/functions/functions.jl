@@ -59,21 +59,7 @@ function stim(t,i,stimNodes,Tstim,nRun,stimOpt)
     end
 end
 
-function h1(hparams,t;idxs = nothing)
-    #history function used on first window
-    u0 = hparams
-        if t < 0
-        return u0[idxs]
-    end
-end
 
-function h2(hparams,t;idxs = nothing)
-    #history function used on windows > 1
-    u_hist= hparams
-        if t < 0
-            return u_hist[idxs](t)
-        end
-end
 
 function normalise(W,N)
 
@@ -93,20 +79,5 @@ function normalise(W,N)
     end
     return W
 end
-
-function fitR(modelFC,realFC)
-	N = size(modelFC,1)
-	modelFCLT = zeros(Int((N^2-N)/2))
-	realFCLT = zeros(Int((N^2-N)/2))
-	c = 1
-	for i = 2:N
-		for j = 1:i-1
-			modelFCLT[c] = modelFC[i,j]
-			realFCLT[c] = realFC[i,j]
-			c+=1
-		end
-	end
-	return cor(modelFCLT,realFCLT)
-end
-		
+	
 

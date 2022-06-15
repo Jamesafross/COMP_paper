@@ -1,4 +1,4 @@
-function WCRun(WCp,bP)
+function wilsoncowan_windows_run()
     adpTime = 15.0
     Rvec = zeros(N,N,nWindows)
     Wvec = zeros(N,N,nWindows)
@@ -6,8 +6,6 @@ function WCRun(WCp,bP)
     size_out = length(BOLD_saveat)
     BOLD_out = zeros(N,size_out,nWindows)
     
-    
-        
     for j = 1:nWindows
 
         global nWindow = j
@@ -27,7 +25,8 @@ function WCRun(WCp,bP)
             vP.tPrev = 0.0
             vP.timeAdapt = 0.01
         end
-        
+        R = zeros(N,N,nWindows)
+    Wsave = zeros(N,N,nWindows)
         tspan = (0.0,tWindows)
         #println(adpTime)
         clags = unique(lags[lags.>0])

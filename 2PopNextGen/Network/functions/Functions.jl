@@ -119,45 +119,6 @@ end
 
 
 
-
-
-function h1(hparams,t;idxs = nothing)
-    #history function used on first window
-        if t < 0
-            return IC.u0[idxs]
-        end
-end
-
-function h2(hparams,t;idxs = nothing)
-    #history function used on windows > 1
-    
-    #println(t)
-    #println(idxs)
-        if t < 0
-            return hparams[idxs](t)
-        end
-end
-
-function normalise(W,N)
-
-   for ii = 1:N
-    W[W .< 0.0] .= 0.0
-        if sum(W[:,ii]) != 0.0
-        @views W[:,ii] = W[:,ii]./sum(W[:,ii])
-        end
-
-    end
-
-     @inbounds for k=1:N #Maintaining symmetry in the weights between regions
-        @inbounds for l = k:N
-                 W[k,l] = (W[k,l]+W[l,k])/2
-                 W[l,k] = W[k,l]
-        end
-    end
-    return W
-end
-
-
 function make_init_conds(NGp,N)
     @unpack ΔE,ΔI,η_0E,η_0I,τE,τI,αEE,αIE,αEI,αII,κSEE,κSIE,κSEI,
     κSII,κVEE,κVIE,κVEI,κVII,VsynEE,VsynIE,VsynEI,VsynII,κ = NGp
@@ -167,7 +128,7 @@ function make_init_conds(NGp,N)
     κVEE,κVIE,κVEI,κVII,
     VsynEE,VsynIE,VsynEI,VsynII,ΔE,ΔI,η_0E,η_0I,τE,τI
 
-    rE0, rI0, vE0, vI0, gEE0, gEI0, gIE0, gII0 = init_conds_SS(params)
+    rE0, rI0, vE0, vI0, gEE0, gEI0, gIE0, gII0 = init_conds_ss(params)
     perturb = 0.0*rand(8*N)
 
     u0 = zeros(8*N)
