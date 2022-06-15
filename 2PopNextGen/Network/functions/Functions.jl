@@ -178,16 +178,6 @@ function find_best_fit(R,FC_Array)
 end
 
 
-        
-function make_hist_mat!(h,W,u::Vector{Float64},hparams,N::Real,lags::Array{Float64},t::Float64,WHistMat::Array{Float64},non_zero_weights)
-        @inbounds Threads.@threads for i in non_zero_weights
-                    WHistMat[i] = W[i]*h(hparams,t-lags[i]; idxs=i[2])
-            end
-end
-
-function make_d!(W::Matrix{Float64},HistMat::Matrix{Float64},d::Vector{Float64})
-    d .= sum(W.*HistMat,dims=2)
-end
 
 function find_non_zero_weights(W)
     return findall(W .> 0.0)
