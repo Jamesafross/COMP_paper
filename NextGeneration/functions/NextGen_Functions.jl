@@ -159,14 +159,7 @@ function make_init_conds(NGp,N)
     u0 = u0 + perturb
 end
 
-function stim(t,i,stimNodes,Tstim,nWindow,stimOpt,stimWindow,stimStr)
 
-    if i ∈ stimNodes && (Tstim[1] <t < Tstim[2]) && (stimOpt == "on" || stimOpt == "ON") && nWindow == stimWindow
-        return stimStr
-    else 
-        return 0.
-    end
-end
 
 function find_best_fit(R,FC_Array)
     fitRvec = zeros(size(FC_Array,3))

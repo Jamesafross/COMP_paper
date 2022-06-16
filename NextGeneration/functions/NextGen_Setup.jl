@@ -1,8 +1,5 @@
 function setup(numThreads,nWindows,tWindows;delays="on",plasticityOpt="on",mode="rest",n_Runs=1,eta_0E = -14.19,kappa=0.505)
 
-    plot_fit = "false"
-    save_data = "true"
-
     W=zeros(N,N)
     W.=SC
 
@@ -56,11 +53,8 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticityOpt="on",mode=
     nRuns = n_Runs
     ONES = ones(N)
     non_zero_weights = find_non_zero_weights(W)
-
-
-    
-
     timer = Timer(0.,0.,0.)
+    
 
     if lowercase(delays) == "on"
         deStr="delays"

@@ -12,18 +12,26 @@ function wilsoncowan_windows_run()
         println("working on window ",j)
         if j == 1
             IC.u0 = 0.1rand(3N)
-          
             hparams = IC.u0
         else
-            opts.stimOpt = "off"
             IC.u0 = sol[:,end]
             iStart = findfirst(sol.t .> tWindows - 1.2)
             u_hist = make_uhist(sol.t[iStart:end] .- sol.t[end],sol[:,iStart:end])
             hparams = u_hist
-           
-            vP.tPrev = 0.0
+            vP.tPrev = 0.0 
             vP.timeAdapt = 0.01
+            vP.count = 0 
+            aP.tP = 0.01
         end
+
+        if opts.plasticity == "on"
+            if j < start_adapt
+                global opts.adapt = "off"
+            else
+                global opts.adapt = "on"
+            end
+        end
+       
 
         tspan = (0.0,tWindows)
         

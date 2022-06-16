@@ -4,15 +4,37 @@ function WC(du,u,h,p,t)
     @unpack cEE,cEI,cIE,cII,τE,τI,τx,Pext,θE,θI,β,η,σ = WCp
     @unpack W,lags,N = nP
     @unpack tPrev,timeAdapt = vP
-    @unpack stimOpt,stimWindow,stimNodes,Tstim,adapt,tWindows,nWindows,ISP = opts
+    @unpack delay,stimOpt,stimWindow,stimNodes,Tstim,adapt,tWindows,nWindows,ISP = opts
 
     make_hist_mat2!(h,W,u,hparams,N,lags,t,WHISTMAT)
     mul!(d,WHISTMAT,ONES)
 
     @inbounds Threads.@threads for i = 1:N
-        #println(d)
+
         E = u[i]
         I = u[i+N]
+
+        if  t >= tP && adapt == "on"
+              
+            weights.cSEEv[i],weights.cSIEv[i],weights.cSEIv[i],weights.cSIIv[i] = adapt_local_func(h,hparams,t,weights,WCp,E,I,i,N,LR)
+
+            if i == N    
+                if mod(vP.count,10) == 0
+                    
+                    wS.cSEEv[:,wS.count] = weights.cSEEv
+                    wS.cSIEv[:,wS.count] = weights.cSIEv
+                    wS.cSEIv[:,wS.count] = weights.cSEIv
+                    wS.cSIIv[:,wS.count] = weights.cSIIv
+                    wS.count += 1
+                end
+                #nP.W = adapt_global_coupling(hparams,N,W,lags,h,t,u,minSC,W_sum)
+                aP.tP += 0.01  
+                aP.tP = round(aP.tP,digits=2)
+                vP.count += 1
+            end
+        end
+        #println(d)
+
         du[i] = (1/τE)*(-E + f(cEE*E + stim(t,i,stimNodes,Tstim,nWindow,stimOpt)+  cIE*I + u[i+2N]+Pext + (η)*d[i],β,θE))
         du[i+N] =(1/τI)*( -I + f(cEI*E + cII*I+u[i+2N],β,θI) )
         du[i+2N] = (-1/τx)*u[i+2N]

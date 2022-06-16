@@ -51,6 +51,7 @@ end
 mutable struct variousPars
     tPrev::Real
     timeAdapt::Real
+    count::Int
 end
 
 
@@ -61,16 +62,25 @@ end
 
 
 mutable struct solverOpts
+    delays::String
     stimOpt::String
     stimWindow::Real
     stimNodes::Vector{Real}
+    stimStr::Real
     Tstim::Vector{Real}
-    adapt::String
+    plasticity::String
+    adapt::Real
     tWindows::Real
     nWindows::Real
     ISP::String
 end
 
-
+mutable struct Weights
+    cEEv
+    cIEv
+    cEIv
+    cIIv
+    cSUM
+end
 
 	

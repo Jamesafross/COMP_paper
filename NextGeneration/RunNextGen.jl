@@ -26,6 +26,7 @@ if use_params == 1
     eta_0E = -14.19
     kappa = 0.505
     delays = "off"
+    save_data = "false"
 end
 
 const multi_thread = "on"
@@ -33,7 +34,7 @@ const multi_thread = "on"
 const SC,dist,lags,N,minSC,W_sum = networksetup(;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
 
 
-const plot_fit,save_data,ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights =
+const ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights =
 setup(numThreads,nWindows,tWindows;delays=delays,plasticityOpt=plasticityOpt)
 
 

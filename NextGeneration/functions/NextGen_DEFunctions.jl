@@ -105,25 +105,24 @@ function nextgen_vec(du,u,h,p,t)
 
        
         if  t >= tP && adapt == "on"
-        
-            
-        κS.κSEEv[i],κS.κSIEv[i],κS.κSEIv[i],κS.κSIIv[i] = adapt_local_func(h,hparams,t,κS,NGp,u[i],u[i+N],i,N,LR)
-        if i == N
-            
-            if mod(vP.count,10) == 0
-                
-                wS.κSEEv[:,wS.count] = κS.κSEEv
-                wS.κSIEv[:,wS.count] = κS.κSIEv
-                wS.κSEIv[:,wS.count] = κS.κSEIv
-                wS.κSIIv[:,wS.count] = κS.κSIIv
-                wS.count += 1
+              
+            κS.κSEEv[i],κS.κSIEv[i],κS.κSEIv[i],κS.κSIIv[i] = adapt_local_func(h,hparams,t,κS,NGp,u[i],u[i+N],i,N,LR)
+
+            if i == N    
+                if mod(vP.count,10) == 0
+                    
+                    wS.κSEEv[:,wS.count] = κS.κSEEv
+                    wS.κSIEv[:,wS.count] = κS.κSIEv
+                    wS.κSEIv[:,wS.count] = κS.κSEIv
+                    wS.κSIIv[:,wS.count] = κS.κSIIv
+                    wS.count += 1
+                end
+                #nP.W = adapt_global_coupling(hparams,N,W,lags,h,t,u,minSC,W_sum)
+                aP.tP += 0.01  
+                aP.tP = round(aP.tP,digits=2)
+                vP.count += 1
             end
-            #nP.W = adapt_global_coupling(hparams,N,W,lags,h,t,u,minSC,W_sum)
-            aP.tP += 0.01  
-            aP.tP = round(aP.tP,digits=2)
-            vP.count += 1
         end
-    end
         
         
         
