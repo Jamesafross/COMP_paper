@@ -1,9 +1,7 @@
 function WC_trials()
-    
-    @unpack 
     for i = 1:nTrials
         println("working on Trial: ",i)
-        out =  WCRun()
+        out =  wilsoncowan_windows_run()
         BOLD_OUT=[]
         for ii = 1:nWindows
             if ii == 1

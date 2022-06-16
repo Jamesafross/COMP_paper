@@ -7,11 +7,11 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticityOpt="on",mode=
     W.=SC
 
 
-    if lowercase(mode) == lowercase("rest")
+    if lowercase(mode) == "rest"
         ss = ["off"]
-    elseif lowercase(mode) == lowercase("rest+stim")
+    elseif lowercase(mode) == "rest+stim"
         ss=["off","on"]
-    elseif lowercase(mode) == lowercase("stim")
+    elseif lowercase(mode) == "stim"
         ss=["on"]
     end
 
@@ -28,7 +28,7 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticityOpt="on",mode=
 
     NGp = NextGen2PopParams2()
     start_adapt = 5
-    if lowercase(plasticity) == lowercase("on")
+    if lowercase(plasticity) == "on"
         nSave = Int((nWindows-(start_adapt-1))*10*tWindows) + 2
     else 
         nSave = 2

@@ -10,7 +10,6 @@ function WC(du,u,h,p,t)
     mul!(d,WHISTMAT,ONES)
 
     @inbounds Threads.@threads for i = 1:N
-        d = 0.0
         #println(d)
         E = u[i]
         I = u[i+N]

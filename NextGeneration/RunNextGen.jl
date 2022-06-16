@@ -16,8 +16,8 @@ if use_params == 1
     numThreads = Threads.nthreads()
     nWindows = 10
     tWindows = 100
-    type_SC = "generated"
-    size_SC =500
+    type_SC = "paulData"
+    size_SC =50
     densitySC=0.3
     delay_digits=10
     plasticityOpt="on"
@@ -38,6 +38,27 @@ setup(numThreads,nWindows,tWindows;delays=delays,plasticityOpt=plasticityOpt)
 
 
 run_nextgen()
+
+
+kappa = "_kappa=$(NGp.κ)"
+etaE = "etaE=$(NGp.η_0E)"
+
+dir0 = "LR_"
+dir1 = string(LR)
+dir2 = "_StimStr_"
+dir3 = string(opts.stimStr)
+
+savename = kappa*etaE*dir0*dir1*dir2*dir3
+
+savedir = dir0*dir1*dir2*dir3
+
+
+
+if save_data == "true"
+    println("saving BOLD data and synaptic weights")
+    save("$OutDATADIR/BOLD/BOLD_$savename.jld","BOLD_$savename",BOLD)
+    save("$OutDATADIR/weights/weights_$savename.jld","weights_$savename",wS)
+end
 
 time_per_second = timer.meanIntegrationTime/tWindows
 

@@ -156,12 +156,17 @@ end
     count
  end
 
- mutable struct init
-    u0
- end
+mutable struct NextGenSol_rest
+    BOLD_rest
+end
 
+mutable struct NextGenSol_stim
+    BOLD_stim
+end
 
- mutable struct hist_buffer
-    u
- end
+mutable struct NextGenSol_reststim
+    BOLD_rest
+    BOLD_stim
+end
 
+ 

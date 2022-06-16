@@ -1,73 +1,63 @@
 function run_nextgen()
     
-    Run_vec = LinRange(1,nRuns,nRuns)
 
-    for jj = 1:length(Run_vec)
-    
-        IC.u0 = make_init_conds(NGp,nP.N)  + 0.1*rand(8*nP.N)
+    IC.u0 = make_init_conds(NGp,nP.N)  + 0.1*rand(8*nP.N)
 
-        for setstim in ss
-            Run = string(Int(round(Run_vec[jj])))
-            nP.W .= SC
-            κS.κSEEv = ones(nP.N)*NGp.κSEE
-            κS.κSIEv = ones(nP.N)*NGp.κSIE
-            κS.κSEIv = ones(nP.N)*NGp.κSEI
-            κS.κSIIv = ones(nP.N)*NGp.κSII
-            κS.κSUM = κS.κSEEv[1]+κS.κSIEv[1]+κS.κSEIv[1]+κS.κSIIv[1]
-            IC.u0 = make_init_conds(NGp,N)  + 0.1*rand(8N)
-            
-            
-            wS.κSEEv[:,1] = κS.κSEEv
-            wS.κSIEv[:,1] = κS.κSIEv
-            wS.κSEIv[:,1] = κS.κSEIv
-            wS.κSIIv[:,1] = κS.κSIIv
-            wS.count = 2
-            
-            global opts.stimOpt = setstim
-
-            println("Running model ... ")
-            @time out,weightSaved = nextgen_model_windows_run()
-
-            BOLD_OUT=[]
-            for ii = 1:opts.nWindows
-                    if ii == 1
-                        BOLD_OUT= out[:,:,ii]
-                    else
-                        BOLD_OUT = cat(BOLD_OUT,out[:,:,ii],dims=2)
-                    end
-            end
-
-
-            if opts.stimOpt == "on"
-                save1 = "stim"
-            else
-                save1="NOstim"
-            end
+    for setstim in ss
+        nP.W .= SC
+        κS.κSEEv = ones(nP.N)*NGp.κSEE
+        κS.κSIEv = ones(nP.N)*NGp.κSIE
+        κS.κSEIv = ones(nP.N)*NGp.κSEI
+        κS.κSIIv = ones(nP.N)*NGp.κSII
+        κS.κSUM = κS.κSEEv[1]+κS.κSIEv[1]+κS.κSEIv[1]+κS.κSIIv[1]
+        IC.u0 = make_init_conds(NGp,N)  + 0.1*rand(8N)
         
-            
-            run = "_Run_$(Run_vec[jj])"
-            kappa = "_kappa=$(NGp.κ)"
-            etaE = "etaE=$(NGp.η_0E)"
-            
-            dir0 = "LR_"
-            dir1 = string(LR)
-            dir2 = "_StimStr_"
-            dir3 = string(opts.stimStr)
+        
+        wS.κSEEv[:,1] = κS.κSEEv
+        wS.κSIEv[:,1] = κS.κSIEv
+        wS.κSEIv[:,1] = κS.κSEIv
+        wS.κSIIv[:,1] = κS.κSIIv
+        wS.count = 2
+        
+        global opts.stimOpt = setstim
 
-            savename = run*kappa*etaE*dir0*dir1*dir2*dir3
+        println("Running model ... ")
+        @time out = nextgen_model_windows_run()
 
-            savedir = dir0*dir1*dir2*dir3
-
-
-            if save_data == "true"
-                println("saving BOLD data and synaptic weights")
-                save("$OutDATADIR/BOLD/BOLD_$savename.jld","BOLD_$savename",BOLD_OUT)
-                save("$OutDATADIR/weights/weights_$savename.jld","weights_$savename",weightSaved)
-            end
-
-
+        BOLD_OUT=[]
+        for ii = 1:opts.nWindows
+                if ii == 1
+                    BOLD_OUT= out[:,:,ii]
+                else
+                    BOLD_OUT = cat(BOLD_OUT,out[:,:,ii],dims=2)
+                end
         end
 
+
+        if opts.stimOpt == "on"
+            save1 = "stim"
+            global BOLD_REST = NextGenSol_rest(BOLD_OUT)
+        else
+            save1="NOstim"
+            global BOLD_REST = NextGenSol_stim(BOLD_OUT)
+        end
+    
+        
+    
+
+
+       
+
+
+
+
+    end
+    if lowercase(mode) == "rest"
+        global BOLD = BOLD_REST
+    elseif lowercase(mode) == "stim"
+        global BOLD = BOLD_REST
+    elseif lowercase(mode) == "rest+stim"
+        global BOLD = NextGenSol_reststim(BOLD_REST.BOLD_rest,BOLD_STIM.Bold_stim)
     end
 
 end

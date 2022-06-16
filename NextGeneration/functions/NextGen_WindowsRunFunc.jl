@@ -105,7 +105,7 @@ function nextgen_model_windows_run()
 
     end
 
-    return BOLD_out,wS
+    return BOLD_out
 
 
 end

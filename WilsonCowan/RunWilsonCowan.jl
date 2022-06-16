@@ -6,7 +6,7 @@ WORKDIR="$PROGDIR/WilsonCowan"
 InDATADIR="$HOMEDIR/NetworkModels_Data/StructDistMatrices"
 BALLOONDIR="$PROGDIR/Balloon_Model"
 include("$BALLOONDIR/BalloonModel.jl")
-include("$WORKDIR/functions/Headers.jl")
+include("$WORKDIR/functions/WC_Headers.jl")
 
 include("$InDATADIR/getData.jl")
 
@@ -14,11 +14,11 @@ include("$InDATADIR/getData.jl")
 
 parallel = "off"
 numThreads=8
-tWindows = 300.
+tWindows = 100.
 nWindows = 10
-nTrials = 2
-type_SC = "generated"
-size_SC =500
+nTrials = 1
+type_SC = "paulData"
+size_SC =20
 densitySC=0.3
 delay_digits=10
 plasticityOpt="on"
@@ -31,10 +31,9 @@ const SC,dist,lags,N,minSC,W_sum = networksetup(;digits=delay_digits,type_SC=typ
 
 if parallel == "on"
 else
-    const plot_fit,save_data,ss,WCp,start_adapt,nP,bP,LR,IC,opts,WHISTMAT,d,timer = 
+    const plot_fit,save_data,BOLD_TRIALS,ss,WCp,vP,start_adapt,nP,bP,LR,IC,opts,WHISTMAT,d,timer,ONES = 
     setup(numThreads,nWindows,tWindows,nTrials;plasticityOpt="on",mode="rest")
 end
-
 
 if parallel == "on"
 

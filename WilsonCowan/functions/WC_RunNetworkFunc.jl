@@ -7,7 +7,7 @@ function run_wilsoncowan()
     else
         for i = 1:nTrials
         println("working on Trial: ",i)
-        out =  WCRun()
+        out =  wilsoncowan_windows_run()()
         BOLD_OUT=[]
         for ii = 1:nWindows
             if ii == 1
@@ -19,5 +19,6 @@ function run_wilsoncowan()
     
         global BOLD_TRIALS[:,:,i] = BOLD_OUT
     
-        end    
+        end 
+    end   
 end

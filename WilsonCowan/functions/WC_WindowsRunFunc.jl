@@ -1,7 +1,6 @@
 function wilsoncowan_windows_run()
-    adpTime = 15.0
-    Rvec = zeros(N,N,nWindows)
-    Wvec = zeros(N,N,nWindows)
+  
+  
     BOLD_saveat = collect(0:1.6:tWindows)
     size_out = length(BOLD_saveat)
     BOLD_out = zeros(N,size_out,nWindows)
@@ -12,12 +11,12 @@ function wilsoncowan_windows_run()
        
         println("working on window ",j)
         if j == 1
-            u0 = 0.1rand(3N)
+            IC.u0 = 0.1rand(3N)
           
-            hparams = u0
+            hparams = IC.u0
         else
             opts.stimOpt = "off"
-            u0 = sol[:,end]
+            IC.u0 = sol[:,end]
             iStart = findfirst(sol.t .> tWindows - 1.2)
             u_hist = make_uhist(sol.t[iStart:end] .- sol.t[end],sol[:,iStart:end])
             hparams = u_hist
@@ -25,18 +24,15 @@ function wilsoncowan_windows_run()
             vP.tPrev = 0.0
             vP.timeAdapt = 0.01
         end
-        R = zeros(N,N,nWindows)
-    Wsave = zeros(N,N,nWindows)
+
         tspan = (0.0,tWindows)
-        #println(adpTime)
-        clags = unique(lags[lags.>0])
-
-
+        
+       
         p = hparams
         if j == 1
-            prob = SDDEProblem(WC, dW,u0, h1, tspan, p;constant_lags = clags)
+            prob = SDDEProblem(WC, dW,IC.u0, h1, tspan, p)
         else
-            prob = SDDEProblem(WC, dW,u0, h2, tspan, p;constant_lags = clags)
+            prob = SDDEProblem(WC, dW,IC.u0, h2, tspan, p)
         end
         @time global sol = solve(prob,RKMil(),maxiters = 1e20)
        
@@ -52,18 +48,8 @@ function wilsoncowan_windows_run()
         end
         println("Running Balloon Model")
         global out,endBM = runBalloon(b0,balloonParams,tspanB,BOLD_saveat,N)
-
+        
     
-        out_trans=(out')  
-        
-        
-
-        for n=1:N
-            for m=n+1:N
-                Rvec[n,m,j]=(cor(out_trans[:,m],out_trans[:,n]))
-                Rvec[m,n,j]=Rvec[n,m,j];
-            end
-        end
 
         BOLD_out[:,:,j] = out
 
