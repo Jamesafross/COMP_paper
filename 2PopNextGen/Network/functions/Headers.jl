@@ -1,7 +1,0 @@
-include("DEfunctions.jl")
-include("WindowsRunFunc.jl")
-include("Structures.jl")
-include("Stability.jl")
-include("Functions.jl")
-include("Setup.jl")
-include("NGRunNetworkFunc.jl")
