@@ -7,7 +7,7 @@ BALLOONDIR="$PROGDIR/Balloon_Model"
 InDATADIR="$HOMEDIR/NetworkModels_Data/StructDistMatrices"
 OutDATADIR="$HOMEDIR/NetworkModels_Data/2PopNextGen_Data"
 include("$WORKDIR/functions/NextGen_Headers.jl")
-include("$PROGDIR/GlobalFunctions/Headers.jl")
+include("$PROGDIR/GlobalFunctions/Global_Headers.jl")
 include("$BALLOONDIR/BalloonModel.jl")
 include("$InDATADIR/getData.jl")
 
