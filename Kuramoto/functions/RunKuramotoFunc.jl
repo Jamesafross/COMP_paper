@@ -28,10 +28,10 @@ function KuramotoRun()
  
          if j == 1
             prob = SDDEProblem(Kuramoto,dW,IC.u0, h1, tspan, p)
-            @time global sol = solve(prob,EM(),dt=0.01,maxiters = 1e20,abstol=0)
+            @time global sol = solve(prob,EM(),dt=0.01,maxiters = 1e20,reltol=0)
          else
             prob = SDDEProblem(Kuramoto,dW,IC.u0, h2, tspan, p)
-            @time global sol = solve(prob,EM(),dt=0.01,maxiters = 1e20,abstol=0)
+            @time global sol = solve(prob,EM(),dt=0.01,maxiters = 1e20,reltol=0)
          end
        
          sol1 = cos.(sol)

@@ -31,7 +31,7 @@ function wilsoncowan_setup(numThreads,nWindows,tWindows,nTrials;plasticityOpt="o
    nP = networkParameters(W, dist,lags, N,minSC,W_sum)
    vP = variousPars(0.0, 50.0)
    bP = ballonModelParameters()
-   LR=0..01
+   LR=0.01
 
    if opts.ISP == "on"
       WCp = WCparamsISP()

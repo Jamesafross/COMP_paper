@@ -160,3 +160,8 @@ end
     u0
  end
 
+
+ mutable struct hist_buffer
+    u
+ end
+

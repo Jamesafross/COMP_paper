@@ -118,6 +118,54 @@ function adapt_local_func(h,hparams,t,κS,NGp,rE,rI,i,N,c;type = "lim")
 end
 
 
+function adapt_local_func_nodelay(κS,NGp,rE,rI,i,c;type = "lim")
+    @unpack ΔE,ΔI,η_0E,η_0I,τE,τI,αEE,αIE,αEI,αII,κSEE,κSIE,κSEI,
+    κSII,κVEE,κVIE,κVEI,κVII,VsynEE,VsynIE,VsynEI,VsynII,κ = NGp
+    @unpack κSEEv,κSIEv,κSEIv,κSIIv,κSUM = κS
+    
+    κSEEv[i] = κSEEv[i] + c*rE*(rE)
+    κSIEv[i] = κSIEv[i] + c*rE*(rI)
+    κSEIv[i] = κSEIv[i] + c*rI*(rE)
+    κSIIv[i] = κSIIv[i] + c*rI*(rI)
+    
+    limEE = 0.2
+    limEI = 0.2
+    limIE = 0.2
+    limII = 0.2
+
+    if type == "lim"
+        if κSEEv[i]  > κSEE + limEE
+            κSEEv[i] = κSEE + limEE
+        elseif κSEEv[i]  < κSEE - limEE
+            κSEEv[i] = κSEE - limEE
+        end
+
+        if κSEIv[i]  > κSEI + limEI
+            κSEIv[i] = κSEI + limEI
+        elseif κSEIv[i]  < κSEI - limEI
+            κSEIv[i] = κSEI - limEI
+        end
+
+        if κSIEv[i]  > κSIE + limIE
+            κSIEv[i] = κSIE + limIE
+        elseif κSIEv[i]  < κSIE - limIE
+            κSIEv[i] = κSIE - limIE
+        end
+
+        if κSIIv[i]  > κSII + limII
+            κSIIv[i] = κSII + limII
+        elseif κSIIv[i]  < κSII - limII
+            κSIIv[i] = κSII - limII
+        end
+    elseif type == "normalised"
+        κSEEv[i], κSIEv[i],κSEIv[i], κSIIv[i] = κSUM*[κSEEv[i], κSIEv[i], κSEIv[i], κSIIv[i]]/(κSEEv[i] + κSIEv[i] + κSEIv[i] + κSIIv[i])
+    end
+
+return κSEEv[i],κSIEv[i],κSEIv[i],κSIIv[i]
+end
+
+
+
 
 function make_init_conds(NGp,N)
     @unpack ΔE,ΔI,η_0E,η_0I,τE,τI,αEE,αIE,αEI,αII,κSEE,κSIE,κSEI,

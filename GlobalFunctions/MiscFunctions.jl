@@ -14,3 +14,4 @@ function normalise(W,N)
      end
      return W
  end
+
