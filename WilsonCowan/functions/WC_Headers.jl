@@ -1,0 +1,9 @@
+PROGDIR="$(homedir())/COMP_paper"
+include("WC_DEFunctions.jl")
+include("WC_Functions.jl")
+include("WC_Structures.jl")
+include("WC_WindowsRunFunc.jl")
+include("WC_Setup.jl")
+include("WC_RunNetworkFunc.jl")
+include("WC_TrialFunc.jl")
+include("$PROGDIR/GlobalFunctions/Headers.jl")

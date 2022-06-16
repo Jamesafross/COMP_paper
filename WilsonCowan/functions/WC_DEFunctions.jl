@@ -6,30 +6,21 @@ function WC(du,u,h,p,t)
     @unpack tPrev,timeAdapt = vP
     @unpack stimOpt,stimWindow,stimNodes,Tstim,adapt,tWindows,nWindows,ISP = opts
 
-    @inbounds for i = 1:N
+    make_hist_mat2!(h,W,u,hparams,N,lags,t,WHISTMAT)
+    mul!(d,WHISTMAT,ONES)
+
+    @inbounds Threads.@threads for i = 1:N
         d = 0.0
-       
-        @inbounds for j = 1:N
-            if W[i,j] > 0.0
-                if lags[i,j] > 0.0
-                    d += W[i,j]*h(hparams,t-lags[i,j],idxs=j)
-              
-                else
-                    d += W[i,j]*u[j]
-                end
-            end
-        end
         #println(d)
         E = u[i]
         I = u[i+N]
-        du[i] = (1/τE)*(-E + f(cEE*E + stim(t,i,stimNodes,Tstim,nWindow,stimOpt)+  cIE*I + u[i+2N]+Pext + (η)*d,β,θE))
+        du[i] = (1/τE)*(-E + f(cEE*E + stim(t,i,stimNodes,Tstim,nWindow,stimOpt)+  cIE*I + u[i+2N]+Pext + (η)*d[i],β,θE))
         du[i+N] =(1/τI)*( -I + f(cEI*E + cII*I+u[i+2N],β,θI) )
         du[i+2N] = (-1/τx)*u[i+2N]
     end
 end
 
 function dW(du,u,h,p,t)
-    hparams = p
     @unpack cEE,cEI,cIE,cII,τE,τI,τx,Pext,θE,θI,η,σ = WCp
     @unpack W,lags,N = nP
     for i = 1:N

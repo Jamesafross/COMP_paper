@@ -4,13 +4,12 @@ HOMEDIR=homedir()
 PROGDIR="$HOMEDIR/COMP_paper"
 WORKDIR="$PROGDIR/WilsonCowan"
 InDATADIR="$HOMEDIR/NetworkModels_Data/StructDistMatrices"
-BalloonDIR="$PROGDIR/Balloon_Model"
+BALLOONDIR="$PROGDIR/Balloon_Model"
+include("$BALLOONDIR/BalloonModel.jl")
 include("$WORKDIR/functions/Headers.jl")
-include("$BalloonDIR/balloonModelFunctions.jl")
-include("$BalloonDIR/balloonModelRHS.jl")
-include("$BalloonDIR/parameter_sets.jl")
+
 include("$InDATADIR/getData.jl")
-include("$PROGDIR/GlobalFunctions/Headers.jl")
+
 
 
 parallel = "off"
@@ -18,13 +17,21 @@ numThreads=8
 tWindows = 300.
 nWindows = 10
 nTrials = 2
+type_SC = "generated"
+size_SC =500
+densitySC=0.3
+delay_digits=10
+plasticityOpt="on"
+mode="rest"
+
+delays = "off"
 
 const SC,dist,lags,N,minSC,W_sum = networksetup(;digits=delay_digits,type_SC=type_SC,N=size_SC,density =0.3)
 
 
 if parallel == "on"
-    include("setupDistributed.jl")
 else
+    const plot_fit,save_data,ss,WCp,start_adapt,nP,bP,LR,IC,opts,WHISTMAT,d,timer = 
     setup(numThreads,nWindows,tWindows,nTrials;plasticityOpt="on",mode="rest")
 end
 
