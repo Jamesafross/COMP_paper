@@ -1,4 +1,4 @@
-using LinearAlgebra
+using LinearAlgebra,ThreadPinning
 mutable struct times_save
     time
     network_size
@@ -14,7 +14,12 @@ times_save_array = Array{times_save}(undef,size(size_SC_vec,1),size(densitySC_ve
 
 counter_i = 1
 numThreads = Threads.nthreads()
+if numThreads > 1
+    LinearAlgebra.BLAS.set_num_threads(1)
+end
 BLASThreads = LinearAlgebra.BLAS.get_num_threads()
+pinthreads(:compact)
+
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
 

@@ -3,12 +3,16 @@ using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistic
 
 HOMEDIR = homedir()
 #WORKDIR="$HOMEDIR/NetworkModels/2PopNextGen"
+PROGDIR = "$HOMEDIR/COMP_paper"
+WORKDIR="$PROGDIR/NextGeneration"
+BALLOONDIR="$PROGDIR/Balloon_Model"
+include("$PROGDIR/GlobalFunctions/Global_Headers.jl")
 InDATADIR="$HOMEDIR/NetworkModels_Data/StructDistMatrices"
 OutDATADIR="$HOMEDIR/NetworkModels_Data/Kuramoto"
-include("./functions/DEfunction.jl")
-include("./functions/structures.jl")
-include("functions/RunKuramotoFunc.jl")
-include("functions/functions.jl")
+include("./functions/Kuramoto_DEFunction.jl")
+include("./functions/Kuramoto_Structures.jl")
+include("functions/Kuramoto_WindowsRunFunc.jl")
+include("functions/Kuramoto_Functions.jl")
 include("../Balloon_Model/BalloonModel.jl")
 include("$InDATADIR/getData.jl")
 
