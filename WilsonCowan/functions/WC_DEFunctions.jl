@@ -4,7 +4,7 @@ function WC(du,u,h,p,t)
     @unpack cEE,cEI,cIE,cII,τE,τI,τx,Pext,θE,θI,β,η,σ = WCp
     @unpack W,lags,N = nP
     @unpack tPrev,timeAdapt = vP
-    @unpack delay,stimOpt,stimWindow,stimNodes,Tstim,adapt,tWindows,nWindows,ISP = opts
+    @unpack delays,stimOpt,stimWindow,stimNodes,Tstim,adapt,tWindows,nWindows,ISP = opts
 
     make_hist_mat2!(h,W,u,hparams,N,lags,t,WHISTMAT)
     mul!(d,WHISTMAT,ONES)
@@ -35,7 +35,7 @@ function WC(du,u,h,p,t)
         end
         #println(d)
 
-        du[i] = (1/τE)*(-E + f(cEE*E + stim(t,i,stimNodes,Tstim,nWindow,stimOpt)+  cIE*I + u[i+2N]+Pext + (η)*d[i],β,θE))
+        du[i] = (1/τE)*(-E + f(cEE*E + stim(t,i,stimNodes,Tstim,nWindow,stimOpt,stimWindow,stimStr)+  cIE*I + u[i+2N]+Pext + (η)*d[i],β,θE))
         du[i+N] =(1/τI)*( -I + f(cEI*E + cII*I+u[i+2N],β,θI) )
         du[i+2N] = (-1/τx)*u[i+2N]
     end

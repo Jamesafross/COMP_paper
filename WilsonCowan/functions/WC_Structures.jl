@@ -69,7 +69,7 @@ mutable struct solverOpts
     stimStr::Real
     Tstim::Vector{Real}
     plasticity::String
-    adapt::Real
+    adapt::String
     tWindows::Real
     nWindows::Real
     ISP::String
@@ -82,5 +82,14 @@ mutable struct Weights
     cIIv
     cSUM
 end
+
+mutable struct weightsSave
+    cEEv
+    cIEv
+    cEIv
+    cIIv
+    count
+end
+
 
 	

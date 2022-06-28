@@ -1,55 +1,48 @@
-using LinearAlgebra,BenchmarkTools,Random
+using LinearAlgebra,BenchmarkTools,Random,CUDA,LoopVectorization
 
-N =1000
-A = rand(N,N) 
-A[1:500,1:500] .= 0
-shuffle!(A)
-B = rand(N,N)
-out1 = zeros(N,N)
-out2 = zeros(N,N)
-out3 = zeros(N,N)
 
-non_zero_idx = findall(A .> 0)
-
-function mmm1!(out,A,B,non_zero_idx)
-    @inbounds @simd for i in non_zero_idx
-            out[i] = A[i]*B[i]
-            end
-end
-
-function mmmT1!(out,A,B,N)
+function mm!(out,A,B,N)
     @inbounds Threads.@threads for i = 1:N
         for j = 1:N
-            if A[j,i] > 0
-                out[j,i] = A[j,i]*B[j,i]
-            end
+            out[j,i] += A[j,i].*B[j,i]
         end
     end
 end
 
-function mmmS1!(out,A,B,N)
-    @inbounds Threads.@threads for i = 1:N
-        @simd for j = 1:N
-            if A[j,i] > 0
-                out[j,i] = A[j,i]*B[j,i]
-            end
-        end
-    end
+function get_out!(outv,outm,A,B,ones,N)
+    mm!(outm,A,B,N)
+    mul!(outv,outm,ones)
 end
 
 
-r1 = rand(1:N)
-r2 = rand(1:N)
+function get_out2!(outv,outm,A,B,N)
+    mul!(outm,A,B)
+    outv .= diag(outm)
+end
+
+
+N = 200
+du = zeros(8*N)
+u = rand(8*N)
+d = rand(N)
+outm = zeros(N,N)
+outv = zeros(N)
+outv1 = zeros(N)
+outv2 = zeros(N)
+ONES = ones(N)
+A = rand(N,N)
+B = rand(N,N)
+
+@btime get_out!(outv,outm,A,B,ONES,N);
+
+@btime get_out2!(outv1,outm,A,B,N);
 
 
 
 
 
-@btime mmm1!(out1,A,B,N)
-@btime mmmT1!(out2,A,B,N)
-@btime mmmS1!(out3,A,B,N)
 
 
-println(out1[r1,r2])
-println(out2[r1,r2])
-println(out3[r1,r2])
+
+
+

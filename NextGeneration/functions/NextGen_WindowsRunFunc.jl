@@ -53,10 +53,10 @@ function nextgen_model_windows_run()
         if j == 1
             if lowercase(opts.delays) == "on"
                 p = hparams
-                alg = MethodOfSteps(BS3())
+                alg = MethodOfSteps(DDEalg)
                 prob = DDEProblem(probDDE,IC.u0, h1, tspan, p)
             elseif lowercase(opts.delays)=="off"
-                alg = BS3()
+                alg = ODEalg
                 prob = ODEProblem(probDDE,IC.u0, tspan)
             end
 
@@ -64,10 +64,10 @@ function nextgen_model_windows_run()
         else
             if lowercase(opts.delays) == "on"
                 p = hparams
-                alg = MethodOfSteps(BS3())
+                alg = MethodOfSteps(DDEalg)
                 prob = DDEProblem(probDDE,IC.u0, h2, tspan, p)
             elseif lowercase(opts.delays)=="off"
-                alg = BS3()
+                alg = ODEalg
                 prob = ODEProblem(probDDE,IC.u0, tspan)
             end
             tic1 = time()
@@ -87,7 +87,7 @@ function nextgen_model_windows_run()
         Current = currentE .+ currentI
 
     
-        BalloonIn= make_In(sol.t,sol[1:N,:])
+        BalloonIn= make_In(sol.t,Current)
         tspanB = (sol.t[1],sol.t[end])
         balloonParams = bP,BalloonIn,N
         if j == 1

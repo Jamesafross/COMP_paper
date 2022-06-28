@@ -72,7 +72,7 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticityOpt="on",mode=
 
     println("Running Next-Gen model with ",deStr," and ",pStr," starting at Window ",start_adapt,".")
 
-    return plot_fit,save_data,ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights
+    return ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights
 
 end
 

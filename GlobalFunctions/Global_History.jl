@@ -12,8 +12,20 @@ function h2(hparams,t;idxs = nothing)
         end
 end
 
-function make_hist_mat2!(h,W::Matrix{Float64},u::Vector{Float64},hparams,N::Real,lags::Array{Float64},t::Float64,WHistMat::Array{Float64})
+function make_hist_mat2_threads!(h,W::Matrix{Float64},u::Vector{Float64},hparams,N::Real,lags::Array{Float64},t::Float64,WHistMat::Array{Float64})
     @inbounds Threads.@threads for i = 1:N
+            for j = 1:N
+                if lags[j,i] > 0
+                    WHistMat[j,i] = W[j,i]*h(hparams,t-lags[j,i]; idxs=i)
+                else
+                    WHistMat[j,i] = W[j,i]*u[i]
+                end
+            end
+        end
+end
+
+function make_hist_mat2_unthreads!(h,W::Matrix{Float64},u::Vector{Float64},hparams,N::Real,lags::Array{Float64},t::Float64,WHistMat::Array{Float64})
+    for i = 1:N
             for j = 1:N
                 if lags[j,i] > 0
                     WHistMat[j,i] = W[j,i]*h(hparams,t-lags[j,i]; idxs=j)

@@ -31,7 +31,7 @@ const SC,dist,lags,N,minSC,W_sum = networksetup(;digits=delay_digits,type_SC=typ
 
 if parallel == "on"
 else
-    const plot_fit,save_data,BOLD_TRIALS,ss,WCp,vP,start_adapt,nP,bP,LR,IC,opts,WHISTMAT,d,timer,ONES = 
+    const BOLD_TRIALS,ss,WCp,vP,start_adapt,nP,bP,LR,IC,weights,wS,opts,WHISTMAT,d,timer,ONES = 
     setup(numThreads,nWindows,tWindows,nTrials;plasticityOpt="on",mode="rest")
 end
 

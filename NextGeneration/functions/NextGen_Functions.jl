@@ -190,5 +190,14 @@ end
 function find_non_zero_weights(W)
     return findall(W .> 0.0)
 end
-        
+
+function drdt(rA,vA,gAA,gAB,τA,κVAA,κVAB,ΔA)
+    return (1. /τA)*(-gAA*rA - gAB*rA - κVAA*rA - κVAB*rA +2. * rA * vA + (ΔA / (τA*pi)))
+end
+
+function dvdt(rA,rB,vA,vB,gAA,gAB,τA,κVAB,VsynAA,VsynAB,η_A0)
+    return (1. /τA)*(gAA*(VsynAA - vA) + gAB*(VsynAB - vB) + κVAB*(vB - vA) - (τA^2)*(pi^2) * (rA^2.) +  vA^2. + η_A0) 
+end
+
+
 

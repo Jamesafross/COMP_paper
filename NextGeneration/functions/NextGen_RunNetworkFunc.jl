@@ -9,7 +9,7 @@ function run_nextgen()
         κS.κSIEv = ones(nP.N)*NGp.κSIE
         κS.κSEIv = ones(nP.N)*NGp.κSEI
         κS.κSIIv = ones(nP.N)*NGp.κSII
-        κS.κSUM = κS.κSEEv[1]+κS.κSIEv[1]+κS.κSEIv[1]+κS.κSIIv[1]
+        κS.κSUM  = κS.κSEEv[1]+κS.κSIEv[1]+κS.κSEIv[1]+κS.κSIIv[1]
         IC.u0 = make_init_conds(NGp,N)  + 0.1*rand(8N)
         
         
@@ -34,7 +34,7 @@ function run_nextgen()
         end
 
 
-        if opts.stimOpt == "on"
+        if opts.stimOpt == "off"
             save1 = "stim"
             global BOLD_REST = NextGenSol_rest(BOLD_OUT)
         else

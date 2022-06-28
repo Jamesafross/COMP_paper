@@ -22,5 +22,5 @@ function networksetup(;digits=3,type_SC="paulData",N=2,density=1)
         
     end
 
-    return SC,dist,lags,N,minSC,W_sum
+    return SC,dist,lags,N,minSC,W_sum,FC_Array
 end

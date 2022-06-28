@@ -15,39 +15,46 @@ function setup(numThreads,nWindows,tWindows,nTrials;delays="on",plasticityOpt="o
       ss=["on"]
    end
 
-
-   stimStr = 1
+   
+   stimOpt = "off"
+   stimStr = -1.
    stimWindow = 2
    stimNodes = [39]
    Tstim = [30,60]
    adapt="off"
    ISP = "off"
    start_adapt=5
-   delay="on"
 
-   cSEEv = ones(N)*WCp.cSEE
-   cSIEv = ones(N)*WCp.cSIE
-   cSEIv = ones(N)*WCp.cSEI
-   cSIIv = ones(N)*WCp.cSII
-   κSUM = cSEEv[1]+cSIEv[1]+cSEIv[1]+cSIIv[1]
+
+   if lowercase(plasticityOpt) == "on"
+      nSave = Int((nWindows-(start_adapt-1))*10*tWindows) + 2
+   else 
+      nSave = 2
+   end
+
+   if ISP == "on"
+      WCp = WCparamsISP()
+   else
+      WCp= WCparams()
+   end
+   
+   cEEv = ones(N)*WCp.cEE
+   cIEv = ones(N)*WCp.cIE
+   cEIv = ones(N)*WCp.cEI
+   cIIv = ones(N)*WCp.cII
+   cSUM = cEEv[1]+cIEv[1]+cEIv[1]+cIIv[1]
 
    weights = Weights(cEEv,cIEv,cEIv,cIIv,cSUM)
-
-   
-
+   wS =  weightsSave(zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),1)
    IC =  init(rand(3N))
-   opts = solverOpts(delay,stimOpt,stimWindow,stimNodes,stimStr,Tstim,plasticityOpt,adapt,tWindows,nWindows,ISP)
+   opts = solverOpts(delays,stimOpt,stimWindow,stimNodes,stimStr,Tstim,plasticityOpt,adapt,tWindows,nWindows,ISP)
    nP = networkParameters(W, dist,lags, N,minSC,W_sum)
    vP = variousPars(0.0, 50.0,0)
    bP = ballonModelParameters()
    LR=0.01
    timer = Timer(0.,0.,0.)
 
-   if opts.ISP == "on"
-      WCp = WCparamsISP()
-   else
-      WCp= WCparams()
-   end
+  
 
    BOLD_saveat = collect(0:1.6:tWindows)
    size_out = length(BOLD_saveat)
@@ -57,7 +64,7 @@ function setup(numThreads,nWindows,tWindows,nTrials;delays="on",plasticityOpt="o
    ONES=ones(N)
    
 
-   return plot_fit,save_data,BOLD_TRIALS,ss,WCp,vP,start_adapt,nP,bP,LR,IC,opts,HISTMAT,d,timer,ONES
+   return BOLD_TRIALS,ss,WCp,vP,start_adapt,nP,bP,LR,IC,weights,wS,opts,HISTMAT,d,timer,ONES
 end
 
 
