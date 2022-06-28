@@ -1,4 +1,5 @@
-global numThreads = 12
+using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations,MKL,ThreadPinning
+global numThreads = 
 
 global nWindows = 4
 global tWindows = 100

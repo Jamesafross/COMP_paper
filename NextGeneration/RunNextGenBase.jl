@@ -1,4 +1,3 @@
-using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations,MKL
 
 HOMEDIR = homedir()
 PROGDIR = "$HOMEDIR/COMP_paper"

@@ -1,4 +1,6 @@
-using LinearAlgebra,ThreadPinning
+using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations,MKL,ThreadPinning
+
+ThreadPinning.mkl_set_dynamic(0)
 mutable struct times_save
     time
     network_size

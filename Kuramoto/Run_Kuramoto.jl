@@ -16,6 +16,26 @@ include("../Balloon_Model/BalloonModel.jl")
 include("$InDATADIR/getData.jl")
 
 
+ThreadPinning.mkl_set_dynamic(0)
+mutable struct times_save
+    time
+    network_size
+    network_density
+ end
+
+
+times_save_array = Array{times_save}(undef,size(size_SC_vec,1),size(densitySC_vec,1))
+
+counter_i = 1
+numThreads = Threads.nthreads()
+if numThreads > 1
+    LinearAlgebra.BLAS.set_num_threads(1)
+end
+BLASThreads = LinearAlgebra.BLAS.get_num_threads()
+pinthreads(:compact)
+
+
+println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
 
 
 #for i = 1:size(W,2)
@@ -23,7 +43,6 @@ include("$InDATADIR/getData.jl")
 #end
 
 
-numThreads = 6
 nWindows = 10
 tWindows = 100
 type_SC = "generated"
@@ -72,7 +91,6 @@ for n = 1:nTrials
 
     BOLD_TRIAL_MEAN += BOLD_OUT/nTrials
 
-    
 end
 
 
