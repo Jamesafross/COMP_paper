@@ -7,7 +7,7 @@ mutable struct times_save
 
  HOMEDIR=homedir()
 
-size_SC_vec = collect(20:50:70)
+size_SC_vec = collect(40:20:60)
 densitySC_vec = [0.2]
 
 times_save_array = Array{times_save}(undef,size(size_SC_vec,1),size(densitySC_vec,1))
@@ -41,7 +41,7 @@ for i in size_SC_vec
         counter_j += 1
 
     end
-    counter_i += 1
+    global counter_i += 1
 end
 
 times_plot = zeros(size(size_SC_vec,1))
