@@ -36,5 +36,4 @@ setup(numThreads,nWindows,tWindows;delays=delays,plasticityOpt=plasticityOpt)
 
 run_nextgen()
 
-
-times_per_second = timer.meanIntegrationTime/tWindows
+time_per_second = timer.meanIntegrationTime/tWindows
