@@ -1,3 +1,4 @@
+using LinearAlgebra
 mutable struct times_save
     time
     network_size
@@ -12,14 +13,15 @@ densitySC_vec = [0.2]
 times_save_array = Array{times_save}(undef,size(size_SC_vec,1),size(densitySC_vec,1))
 
 counter_i = 1
+numThreads = Threads.nthreads()
+BLASThreads = LinearAlgebra.BLAS.get_num_threads()
+
+println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
 
 
 for i in size_SC_vec
     counter_j = 1
     for j in densitySC_vec
-        
-        global numThreads = 12
-
         global nWindows = 4
         global tWindows = 100
         global type_SC = "generated"
