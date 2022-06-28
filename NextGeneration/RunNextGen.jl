@@ -1,58 +1,21 @@
-using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations,MKL
+global numThreads = 12
 
-HOMEDIR = homedir()
-PROGDIR = "$HOMEDIR/COMP_paper"
-WORKDIR="$PROGDIR/NextGeneration"
-BALLOONDIR="$PROGDIR/Balloon_Model"
-InDATADIR="$HOMEDIR/NetworkModels_Data/StructDistMatrices"
-OutDATADIR="$HOMEDIR/NetworkModels_Data/2PopNextGen_Data"
-include("$WORKDIR/functions/NextGen_Headers.jl")
-include("$PROGDIR/GlobalFunctions/Global_Headers.jl")
-include("$BALLOONDIR/BalloonModel.jl")
-include("$InDATADIR/getData.jl")
-include("$PROGDIR/StatisticalAnalysis/get_fitness.jl")
-include("$PROGDIR/StatisticalAnalysis/functions.jl")
+global nWindows = 4
+global tWindows = 100
+global type_SC = "generated"
+global size_SC = 20
+global densitySC= 0.3
+global delay_digits=3
+global plasticityOpt="off"
+global mode="rest"
+global n_Runs=1
+global eta_0E = -14.19
+global kappa = 0.505
+global delays = "on"
+global multi_thread = "on"
 
-use_params = 1
-if use_params == 1
-    numThreads = Threads.nthreads()
-    nWindows = 10
-    tWindows = 100
-    type_SC = "paulDATA"
-    size_SC =50
-    densitySC=0.3
-    delay_digits=3
-    plasticityOpt="on"
-    mode="rest"
-    n_Runs=1
-    eta_0E = -14.16
-    kappa = 0.505
-    delays = "on"
-    save_data = "false"
-    global multi_thread = "on"
-end
+include("$HOMEDIR/COMP_paper/NextGeneration/RunNextGenBase.jl")
 
-DDEalg = BS3()
-ODEalg = BS3()
-
-
-
-
-if multi_thread == "off"
-    nextgen(du,u,h,p,t) = nextgen_unthreads(du,u,h,p,t)
-else
-    nextgen(du,u,h,p,t) = nextgen_threads(du,u,h,p,t)
-end
-
-
-const SC,dist,lags,N,minSC,W_sum,FC_Array = networksetup(;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
-
-
-const ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights =
-setup(numThreads,nWindows,tWindows;delays=delays,plasticityOpt=plasticityOpt)
-
-
-run_nextgen()
 
 
 kappa = "_kappa=$(NGp.κ)"

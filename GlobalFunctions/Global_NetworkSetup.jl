@@ -11,6 +11,7 @@ function networksetup(;digits=3,type_SC="paulData",N=2,density=1)
         SC = 0.01SC_Array[:,:,1]
         minSC,W_sum=getMinSC_and_Wsum(SC)
         N = size(SC,1)
+        return SC,dist,lags,N,minSC,W_sum,FC_Array
     elseif lowercase(type_SC) == lowercase("generated")
         
         SC,lags = generate_network_matrices(N;density=density)
@@ -18,9 +19,9 @@ function networksetup(;digits=3,type_SC="paulData",N=2,density=1)
         dist = lags
         minSC,W_sum=getMinSC_and_Wsum(SC)
         N = size(SC,1)
+        return SC,dist,lags,N,minSC,W_sum
 
-        
     end
-
-    return SC,dist,lags,N,minSC,W_sum,FC_Array
+    
+    
 end

@@ -6,7 +6,7 @@ mutable struct times_save
 
  HOMEDIR=homedir()
 
-size_SC_vec = collect(20:50:600)
+size_SC_vec = collect(20:50:70)
 densitySC_vec = [0.2]
 
 times_save_array = Array{times_save}(undef,size(size_SC_vec,1),size(densitySC_vec,1))
@@ -24,7 +24,7 @@ for i in size_SC_vec
         global tWindows = 100
         global type_SC = "generated"
         global size_SC = i
-        global densitySC=j
+        global densitySC= j
         global delay_digits=3
         global plasticityOpt="off"
         global mode="rest"
@@ -33,7 +33,7 @@ for i in size_SC_vec
         global kappa = 0.505
         global delays = "on"
         global multi_thread = "on"
-        include("$HOMEDIR/COMP_paper/NextGeneration/RunNextGen.jl")
+        include("$HOMEDIR/COMP_paper/NextGeneration/RunNextGenBase.jl")
 
         times_save_array[counter_i,counter_j] = times_save(time_per_second,size_SC,densitySC)
         counter_j += 1
@@ -48,7 +48,6 @@ for i = 1:size(size_SC_vec,1)
     times_plot[i] = times_save_array[i,1].time
 end
 
-plot(size_SC_vec,50*times_plot,yaxis=:log)
-
+save("$HOMEDIR/COMP_paper/NextGeneration/times_save.jld","times_save_array",times_save_array)
 
 
