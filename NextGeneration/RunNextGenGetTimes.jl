@@ -1,4 +1,4 @@
-using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations,ThreadPinning
+using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations,ThreadPinning,MKL
 
 #ThreadPinning.mkl_set_dynamic(0)
 mutable struct times_save
@@ -9,7 +9,7 @@ mutable struct times_save
 
  HOMEDIR=homedir()
 
-size_SC_vec = collect(40:20:60)
+size_SC_vec = collect(40:20:200)
 densitySC_vec = [0.2]
 
 times_save_array = Array{times_save}(undef,size(size_SC_vec,1),size(densitySC_vec,1))
@@ -17,7 +17,7 @@ times_save_array = Array{times_save}(undef,size(size_SC_vec,1),size(densitySC_ve
 counter_i = 1
 numThreads = Threads.nthreads()
 if numThreads > 1
-    LinearAlgebra.BLAS.set_num_threads(numThreads)
+    LinearAlgebra.BLAS.set_num_threads(1)
 end
 BLASThreads = LinearAlgebra.BLAS.get_num_threads()
 pinthreads(:compact)
@@ -30,7 +30,7 @@ for i in size_SC_vec
     counter_j = 1
     for j in densitySC_vec
         global nWindows = 4
-        global tWindows = 100
+        global tWindows = 30
         global type_SC = "generated"
         global size_SC = i
         global densitySC= j
