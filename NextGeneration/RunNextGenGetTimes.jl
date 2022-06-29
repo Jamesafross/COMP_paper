@@ -1,6 +1,6 @@
-using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations,MKL,ThreadPinning
+using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations,ThreadPinning
 
-ThreadPinning.mkl_set_dynamic(0)
+#ThreadPinning.mkl_set_dynamic(0)
 mutable struct times_save
     time
     network_size
@@ -17,7 +17,7 @@ times_save_array = Array{times_save}(undef,size(size_SC_vec,1),size(densitySC_ve
 counter_i = 1
 numThreads = Threads.nthreads()
 if numThreads > 1
-    LinearAlgebra.BLAS.set_num_threads(1)
+    LinearAlgebra.BLAS.set_num_threads(numThreads)
 end
 BLASThreads = LinearAlgebra.BLAS.get_num_threads()
 pinthreads(:compact)
