@@ -35,11 +35,11 @@ function run_nextgen()
 
 
         if opts.stimOpt == "off"
-            save1 = "stim"
-            global BOLD_REST = NextGenSol_rest(BOLD_OUT)
+            save1 = "NOstim"
+            global BOLD_REST= NextGenSol_rest(BOLD_OUT)
         else
-            save1="NOstim"
-            global BOLD_REST = NextGenSol_stim(BOLD_OUT)
+            save1="stim"
+            global BOLD_STIM = NextGenSol_stim(BOLD_OUT)
         end
     
         
@@ -55,9 +55,9 @@ function run_nextgen()
     if lowercase(mode) == "rest"
         global BOLD = BOLD_REST
     elseif lowercase(mode) == "stim"
-        global BOLD = BOLD_REST
+        global BOLD = BOLD_STIM
     elseif lowercase(mode) == "rest+stim"
-        global BOLD = NextGenSol_reststim(BOLD_REST.BOLD_rest,BOLD_STIM.Bold_stim)
+        global BOLD = NextGenSol_reststim(BOLD_REST.BOLD_rest,BOLD_STIM.BOLD_stim)
     end
 
 end

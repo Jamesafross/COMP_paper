@@ -1,5 +1,3 @@
-
-HOMEDIR = homedir()
 PROGDIR = "$HOMEDIR/COMP_paper"
 WORKDIR="$PROGDIR/NextGeneration"
 BALLOONDIR="$PROGDIR/Balloon_Model"
@@ -31,7 +29,7 @@ else
 end
 
 const ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights =
-setup(numThreads,nWindows,tWindows;delays=delays,plasticityOpt=plasticityOpt)
+setup(numThreads,nWindows,tWindows;delays=delays,mode=mode,plasticityOpt=plasticityOpt)
 
 run_nextgen()
 

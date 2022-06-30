@@ -1,13 +1,26 @@
-using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations,ThreadPinning,MKL
+using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations
+HOMEDIR=homedir()
 
-#ThreadPinning.mkl_set_dynamic(0)
+@static if Sys.islinux() 
+    using ThreadPinning,MKL
+    ThreadPinning.mkl_set_dynamic(0)
+    pinthreads(:compact)
+end
+
+numThreads = Threads.nthreads()
+if numThreads > 1
+    LinearAlgebra.BLAS.set_num_threads(1)
+end
+BLASThreads = LinearAlgebra.BLAS.get_num_threads()
+
+
+println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
+
 mutable struct times_save
     time
     network_size
     network_density
  end
-
- HOMEDIR=homedir()
 
 size_SC_vec = collect(40:20:200)
 densitySC_vec = [0.2]
