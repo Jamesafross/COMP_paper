@@ -1,5 +1,4 @@
-function networksetup(;digits=3,type_SC="paulData",N=2,density=1)
-    c=7000.
+function networksetup(c;digits=3,type_SC="paulData",N=2,density=1)
     if lowercase(type_SC) == lowercase("paulData")
         SC_Array,FC_Array,dist = getData_nonaveraged(;SCtype="log")
         FC_Array = FC_Array

@@ -23,7 +23,7 @@ else
 end
 
 if lowercase(type_SC) == lowercase("paulData")
-    const SC,dist,lags,N,minSC,W_sum,FC_Array = networksetup(;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
+    const SC,dist,lags,N,minSC,W_sum,FC_Array = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
 else
     const SC,dist,lags,N,minSC,W_sum = networksetup(;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
 end

@@ -16,19 +16,20 @@ BLASThreads = LinearAlgebra.BLAS.get_num_threads()
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
 
-global nWindows = 30
-global tWindows = 50
+global nWindows = 20
+global tWindows = 100
 global type_SC = "pauldata"
 global size_SC = 200
 global densitySC= 0.3
 global delay_digits=10
-global plasticityOpt="on"
+global plasticityOpt="off"
 global mode="rest"  #(rest,stim or rest+stim)
 global n_Runs=1
-global eta_0E = -14.16
+global eta_0E = -14.9
 global kappa = 0.505
 global delays = "on"
 global multi_thread = "on"
+global c = 15000
 
 plotdata = "false"
 
