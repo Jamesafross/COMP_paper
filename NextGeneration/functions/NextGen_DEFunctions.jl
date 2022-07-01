@@ -166,7 +166,7 @@
     @unpack tP,HIST = aP 
     rEcurrent .= u[1:N]
 
-    @time mul!(d,W,rEcurrent)
+    mul!(d,W,rEcurrent)
 
     @inbounds for i = 1:N
        
