@@ -28,7 +28,7 @@ else
     const SC,dist,lags,N,minSC,W_sum = networksetup(;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
 end
 
-const ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights =
+const ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights,rEcurrent =
 setup(numThreads,nWindows,tWindows;delays=delays,mode=mode,plasticityOpt=plasticityOpt)
 
 run_nextgen()

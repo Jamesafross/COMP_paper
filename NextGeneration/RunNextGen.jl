@@ -27,8 +27,12 @@ global mode="rest"  #(rest,stim or rest+stim)
 global n_Runs=1
 global eta_0E = -14.9
 global kappa = 0.505
-global delays = "on"
+global delays = "off"
 global multi_thread = "on"
+if numThreads == 1
+    global multi_thread = "off"
+end
+
 global c = 15000
 
 plotdata = "false"

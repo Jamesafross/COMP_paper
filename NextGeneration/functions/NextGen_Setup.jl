@@ -54,6 +54,7 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticityOpt="on",mode=
     ONES = ones(N)
     non_zero_weights = find_non_zero_weights(W)
     timer = Timer(0.,0.,0.)
+    rEcurrent = zeros(N)
     
 
     if lowercase(delays) == "on"
@@ -72,7 +73,7 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticityOpt="on",mode=
 
     println("Running Next-Gen model with ",deStr," and ",pStr," starting at Window ",start_adapt,".")
 
-    return ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights
+    return ss,NGp,start_adapt,nP,bP,LR,IC,κS,wS,opts,vP,aP,WHISTMAT,d,nRuns,timer,ONES,non_zero_weights,rEcurrent
 
 end
 

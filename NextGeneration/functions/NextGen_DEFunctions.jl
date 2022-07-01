@@ -164,8 +164,9 @@
     @unpack stimOpt,stimWindow,stimNodes,stimStr,Tstim,adapt,synapses,tWindows,nWindows = opts
     @unpack W,dist,lags,N,minSC,W_sum = nP
     @unpack tP,HIST = aP 
+    rEcurrent .= u[1:N]
 
-    mul!(d,W,u[1:N])
+    @time mul!(d,W,rEcurrent)
 
     @inbounds for i = 1:N
        
