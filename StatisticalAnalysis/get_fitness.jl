@@ -10,7 +10,7 @@ function getFCwindows(SIG,N)
 end
 
 
-function get_fitness(BOLD,REALFC)
+function get_FC(BOLD)
     step_i = 20
     step_j = 300
     N = size(BOLD,1)
@@ -27,7 +27,7 @@ function get_fitness(BOLD,REALFC)
 
 
 
-    DATA_FC = zeros(N,N,counterT) 
+    MODEL_FC = zeros(N,N,counterT) 
 
    
 
@@ -36,7 +36,7 @@ function get_fitness(BOLD,REALFC)
     for i = 1:step_i:size(BOLD,2)
         j = i + step_j
         if j < size(BOLD,2)
-            DATA_FC[:,:,counter] = getFCwindows(BOLD[:,i:j],N)
+            MODEL_FC[:,:,counter] = getFCwindows(BOLD[:,i:j],N)
             counter += 1
             #println(counter)
           
@@ -44,5 +44,5 @@ function get_fitness(BOLD,REALFC)
             break
         end
     end
-    return DATA_FC[:,:,1:end-1]
+    return MODE_FC[:,:,1:end-1]
 end

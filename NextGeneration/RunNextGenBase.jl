@@ -7,8 +7,7 @@ include("$WORKDIR/functions/NextGen_Headers.jl")
 include("$PROGDIR/GlobalFunctions/Global_Headers.jl")
 include("$BALLOONDIR/BalloonModel.jl")
 include("$InDATADIR/getData.jl")
-include("$PROGDIR/StatisticalAnalysis/get_fitness.jl")
-include("$PROGDIR/StatisticalAnalysis/functions.jl")
+
 
 
 DDEalg = BS3()

@@ -60,7 +60,7 @@ function nextgen_model_windows_run()
                 prob = ODEProblem(probDDE,IC.u0, tspan)
             end
 
-            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
+            global sol = solve(prob,alg,dtmin=0.0001,force_dtmin=true,maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
         else
             if lowercase(opts.delays) == "on"
                 p = hparams
@@ -71,7 +71,7 @@ function nextgen_model_windows_run()
                 prob = ODEProblem(probDDE,IC.u0, tspan)
             end
             tic1 = time()
-            @time global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
+            @time global sol = solve(prob,alg,dtmin=0.0001,force_dtmin=true,maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
             global timer.meanIntegrationTime += (time() - tic1)/(nWindows-1)
         end
         vE = sol[2N+1:3N,:]
