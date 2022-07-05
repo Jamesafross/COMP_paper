@@ -16,19 +16,20 @@ BLASThreads = LinearAlgebra.BLAS.get_num_threads()
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
 
-global nWindows = 3
-global tWindows = 100
+global nWindows = 2
+global tWindows = 300
 global type_SC = "pauldata"
 global size_SC = 200
 global densitySC= 0.3
-global delay_digits=10
+global delay_digits=6
 global plasticityOpt="off"
 global mode="rest"  #(rest,stim or rest+stim)
 global n_Runs=1
-global eta_0E = -14.5
-global kappa = 0.505
+global eta_0E = -15.1
+global kappa = 0.6
 global delays = "on"
 global multi_thread = "on"
+global constant_delay = 0.005
 if numThreads == 1
     global multi_thread = "off"
 end
@@ -71,13 +72,15 @@ FC_fit_to_data = zeros(size(modelFC,3),size(FC_Array,3))
 FC_fit_to_data_mean = zeros(size(modelFC,3))
 
 for i = 1:size(modelFC,3)
-    FC_fit_to_data_mean[i] = fitR(modelFC[:,:,i],mean(FC_Array[:,:,:],dims=3))
+    FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i],mean(FC_Array[:,:,:],dims=3))
     for j = 1:size(FC_Array,3)
-        FC_fit_to_data[i,j] = fitR(modelFC[:,:,i],FC_Array[:,:,j])
+        FC_fit_to_data[i,j] = fit_r(modelFC[:,:,i],FC_Array[:,:,j])
     end
 end
 
+println("max fit = ", maximum(FC_fit_to_data_mean))
 plot(FC_fit_to_data_mean)
+
 end
 
 

@@ -16,16 +16,22 @@ BLASThreads = LinearAlgebra.BLAS.get_num_threads()
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
 
-nVec = 20
-eta_0E_vec = LinRange(-14.0,-14.5,nVec)
-fitnessVec = zeros(nVec)
-for i = 1:nVec
-    global nWindows = 5
-    global tWindows = 100
+nVec1 = 30
+eta_0E_vec = LinRange(-13.0,-15,nVec1)
+
+nVec2 = 1
+#kappa_vec = LinRange(0.3,0.6,nVec2)
+fitnessVec = zeros(nVec1,nVec2)
+for i = 1:nVec1; for j = 1:nVec2;
+
+    
+    
+    global nWindows = 2
+    global tWindows = 300
     global type_SC = "pauldata"
     global size_SC = 200
     global densitySC= 0.3
-    global delay_digits=10
+    global delay_digits=6
     global plasticityOpt="off"
     global mode="rest"  #(rest,stim or rest+stim)
     global n_Runs=1
@@ -33,9 +39,12 @@ for i = 1:nVec
     global kappa = 0.505
     global delays = "on"
     global multi_thread = "on"
+    global constant_delay = 0.005
     if numThreads == 1
         global multi_thread = "off"
     end
+
+    println("Running trial for: η0E = ",eta_0E," κ = ", kappa)
 
     global c = 12000
 
@@ -55,15 +64,15 @@ for i = 1:nVec
     FC_fit_to_data_mean = zeros(size(modelFC,3))
 
     for i = 1:size(modelFC,3)
-        FC_fit_to_data_mean[i] = fitR(modelFC[:,:,i],mean(FC_Array[:,:,:],dims=3))
+        FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i],mean(FC_Array[:,:,:],dims=3))
         for j = 1:size(FC_Array,3)
-            FC_fit_to_data[i,j] = fitR(modelFC[:,:,i],FC_Array[:,:,j])
+            FC_fit_to_data[i,j] = fit_r(modelFC[:,:,i],FC_Array[:,:,j])
         end
     end
 
     print(FC_fit_to_data_mean)
-    fitnessVec[i] = maximum(FC_fit_to_data_mean)
-end
+    fitnessVec[i,j] = maximum(FC_fit_to_data_mean)
+end;end
 
 
 
