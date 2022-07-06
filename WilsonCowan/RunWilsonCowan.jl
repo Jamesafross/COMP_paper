@@ -26,7 +26,7 @@ include("$InDATADIR/getData.jl")
 parallel = "off"
 tWindows = 300
 nWindows = 2
-nTrials = 10
+nTrials = 1
 type_SC = "paulData"
 size_SC =20
 densitySC=0.3
@@ -41,7 +41,7 @@ plotdata = true
 normaliseSC = true
 
 
-WCpars = WCparams(Pext = 0.302,η=0.21)
+WCpars = WCparams(Pext = 0.34,η=0.21)
 
 
 include("RunWilsonCowanBase.jl")
