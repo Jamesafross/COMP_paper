@@ -9,6 +9,7 @@ function WC(du,u,h,p,t)
 
 
     make_hist_mat2_threads!(h,W,u,hparams,N,lags,t,WHISTMAT)
+    
     mul!(d,WHISTMAT,ONES)
 
     @inbounds Threads.@threads for i = 1:N

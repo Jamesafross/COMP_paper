@@ -1,4 +1,4 @@
-function setup(nWindows,tWindows,nTrials;delays="on",plasticityOpt="on",mode="rest",ISP="off",WCpars = WCparams())
+function setup(nWindows,tWindows,nTrials;parallel="off",delays="on",plasticityOpt="on",mode="rest",ISP="off",WCpars = WCparams())
    #load data and make struct & dist matrices
    println("setting up Wilson Cowan Model")
 
@@ -62,6 +62,9 @@ function setup(nWindows,tWindows,nTrials;delays="on",plasticityOpt="on",mode="re
    BOLD_saveat = collect(0:1.6:tWindows)
    size_out = length(BOLD_saveat)
    BOLD_TRIALS = zeros(N,nWindows*size_out,nTrials)
+   if parallel == "on"
+      BOLD_TRIALS = SharedArray(BOLD_TRIALS)
+   end
    HISTMAT = zeros(N,N)
    d=zeros(N)
    ONES=ones(N)
