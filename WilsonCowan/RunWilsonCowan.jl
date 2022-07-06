@@ -1,4 +1,19 @@
-using LinearAlgebra,Plots,StochasticDelayDiffEq,Parameters,Statistics,StatsBase,DifferentialEquations,JLD,Interpolations,Distributed
+using LinearAlgebra,Plots,StochasticDelayDiffEq,Parameters,Statistics,StatsBase,DifferentialEquations,JLD,Interpolations,Distributed,MKL
+
+@static if Sys.islinux() 
+    using ThreadPinning,MKL
+    ThreadPinning.mkl_set_dynamic(0)
+    pinthreads(:compact)
+end
+
+numThreads = Threads.nthreads()
+if numThreads > 1
+    LinearAlgebra.BLAS.set_num_threads(1)
+end
+BLASThreads = LinearAlgebra.BLAS.get_num_threads()
+
+println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
+
 HOMEDIR=homedir()
 PROGDIR="$HOMEDIR/COMP_paper"
 WORKDIR="$PROGDIR/WilsonCowan"
@@ -8,25 +23,25 @@ include("$BALLOONDIR/BalloonModel.jl")
 include("$WORKDIR/functions/WC_Headers.jl")
 include("$InDATADIR/getData.jl")
 
-global parallel = "off"
-global tWindows = 300
-global nWindows = 2
-global nTrials = 1
-global type_SC = "paulData"
-global size_SC =20
-global densitySC=0.3
-global delay_digits=10
-global plasticityOpt="off"
-global mode="rest"
-global c = 13000
-global constant_delay = 0.005
-global delays = "on"
-global ISP = "off"
+parallel = "off"
+tWindows = 300
+nWindows = 2
+nTrials = 10
+type_SC = "paulData"
+size_SC =20
+densitySC=0.3
+delay_digits=10
+plasticityOpt="off"
+mode="rest"
+c = 13000
+constant_delay = 0.005
+delays = "on"
+ISP = "off"
 plotdata = true
 normaliseSC = true
 
 
-global WCpars = WCparams(Pext = 0.31,η=0.21)
+WCpars = WCparams(Pext = 0.302,η=0.21)
 
 
 include("RunWilsonCowanBase.jl")
@@ -56,7 +71,7 @@ print(time_per_second)
         FC_fit_to_data_mean = zeros(size(modelFC,3))
 
         for i = 1:size(modelFC,3)
-            FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i],mean(FC_Array[:,:,:],dims=3))
+            FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i],mean(FC_Array[:,:,:],dims=3)[:,:])
             for j = 1:size(FC_Array,3)
                 FC_fit_to_data[i,j] = fit_r(modelFC[:,:,i],FC_Array[:,:,j])
             end

@@ -164,12 +164,13 @@
     @unpack stimOpt,stimWindow,stimNodes,stimStr,Tstim,adapt,synapses,tWindows,nWindows = opts
     @unpack W,dist,lags,N,minSC,W_sum = nP
     @unpack tP,HIST = aP 
-    rEcurrent .= u[1:N]
+    rE .= u[1:N]
+
 
     mul!(d,W,rEcurrent)
 
     @inbounds for i = 1:N
-       
+
 
         rE=u[i]
         rI=u[i+N]
@@ -204,7 +205,7 @@
         
         
         #rE
-        du[i] =(1. /τE)*(-gEE*rE -gEI*rE - κVEE*rE - κVEI*rE +2. * rE * vE + (ΔE / (τE*pi)))
+       @time du[i] =(1. /τE)*(-gEE*rE -gEI*rE - κVEE*rE - κVEI*rE +2. * rE * vE + (ΔE / (τE*pi)))
         #rI
         du[i+N] =(1. /τI)*(-gIE*rI - gII*rI -κVIE*rI - κVII*rI + 2. * rI * vI + (ΔI / (τI*pi)))
         #vE
