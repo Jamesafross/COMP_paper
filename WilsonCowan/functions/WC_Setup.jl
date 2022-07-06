@@ -1,5 +1,6 @@
-function setup(numThreads,nWindows,tWindows,nTrials;delays="on",plasticityOpt="on",mode="rest")
+function setup(nWindows,tWindows,nTrials;delays="on",plasticityOpt="on",mode="rest",ISP="off",WCpars = WCparams())
    #load data and make struct & dist matrices
+   println("setting up Wilson Cowan Model")
 
    plot_fit = "false"
    save_data = "true"
@@ -22,7 +23,6 @@ function setup(numThreads,nWindows,tWindows,nTrials;delays="on",plasticityOpt="o
    stimNodes = [39]
    Tstim = [30,60]
    adapt="off"
-   ISP = "off"
    start_adapt=5
 
 
@@ -32,10 +32,12 @@ function setup(numThreads,nWindows,tWindows,nTrials;delays="on",plasticityOpt="o
       nSave = 2
    end
 
+   println(nSave)
+
    if ISP == "on"
-      WCp = WCparamsISP()
+      WCp = WCpars
    else
-      WCp= WCparams()
+      WCp= WCpars
    end
    
    cEEv = ones(N)*WCp.cEE
@@ -49,6 +51,7 @@ function setup(numThreads,nWindows,tWindows,nTrials;delays="on",plasticityOpt="o
    IC =  init(rand(3N))
    opts = solverOpts(delays,stimOpt,stimWindow,stimNodes,stimStr,Tstim,plasticityOpt,adapt,tWindows,nWindows,ISP)
    nP = networkParameters(W, dist,lags, N,minSC,W_sum)
+   aP = adaptParams(10.01,IC.u0[1:N])
    vP = variousPars(0.0, 50.0,0)
    bP = ballonModelParameters()
    LR=0.01
@@ -64,7 +67,7 @@ function setup(numThreads,nWindows,tWindows,nTrials;delays="on",plasticityOpt="o
    ONES=ones(N)
    
 
-   return BOLD_TRIALS,ss,WCp,vP,start_adapt,nP,bP,LR,IC,weights,wS,opts,HISTMAT,d,timer,ONES
+   return BOLD_TRIALS,ss,WCp,vP,aP,start_adapt,nP,bP,LR,IC,weights,wS,opts,HISTMAT,d,timer,ONES
 end
 
 

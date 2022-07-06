@@ -1,20 +1,10 @@
-PROGDIR = "$HOMEDIR/COMP_paper"
-WORKDIR="$PROGDIR/NextGeneration"
-BALLOONDIR="$PROGDIR/Balloon_Model"
-InDATADIR="$HOMEDIR/NetworkModels_Data/StructDistMatrices"
-OutDATADIR="$HOMEDIR/NetworkModels_Data/2PopNextGen_Data"
-include("$WORKDIR/functions/NextGen_Headers.jl")
-include("$PROGDIR/GlobalFunctions/Global_Headers.jl")
-include("$BALLOONDIR/BalloonModel.jl")
-include("$InDATADIR/getData.jl")
 
-
-
+# Choose DE time-stepper
 DDEalg = BS3()
 ODEalg = BS3()
 
 
-
+# get correct DE functions
 if multi_thread == "off"
     nextgen(du,u,h,p,t) = nextgen_unthreads(du,u,h,p,t)
 else

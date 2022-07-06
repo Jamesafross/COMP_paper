@@ -43,10 +43,10 @@ function adapt_local_func(h,hparams,t,κS,NGp,rE,rI,i,N,c;type = "lim")
     @unpack cEE,cEI,cIE,cII,τE,τI,τx,Pext,θE,θI,β,η,σ = WCp
     @unpack cEEv,cIEv,cEIv,cIIv,cSUM = weights
     
-    κSEEv[i] = (κSEEv[i] + c*rE*(rE - h(hparams,t-1.0;idxs = i)))
-    κSIEv[i] = (κSIEv[i] + c*rE*(rI - h(hparams,t-1.0;idxs = i+N)))
-    κSEIv[i] = (κSEIv[i] + c*rI*(rE - h(hparams,t-1.0;idxs = i)))
-    κSIIv[i] = (κSIIv[i] + c*rI*(rI - h(hparams,t-1.0;idxs = i+N)))
+    cEEv[i] = (cEEv[i] + c*rE*(rE - h(hparams,t-1.0;idxs = i)))
+    cIEv[i] = (cIEv[i] + c*rE*(rI - h(hparams,t-1.0;idxs = i+N)))
+    cEIv[i] = (cEIv[i] + c*rI*(rE - h(hparams,t-1.0;idxs = i)))
+    cIIv[i] = (cIIv[i] + c*rI*(rI - h(hparams,t-1.0;idxs = i+N)))
     
     limEE = 0.2
     limEI = 0.2

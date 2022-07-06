@@ -15,5 +15,11 @@ mutable struct init
 end
 
 
+mutable struct adaptParams
+   tP::Float64
+   HIST::Array{Float64}
+end
+
+
 
  

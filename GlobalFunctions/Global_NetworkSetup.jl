@@ -1,4 +1,4 @@
-function networksetup(c;digits=3,type_SC="paulData",N=2,density=1)
+function networksetup(c;digits=3,type_SC="paulData",N=2,density=1,normalise=false)
     if lowercase(type_SC) == lowercase("paulData")
         SC_Array,FC_Array,dist = getData_nonaveraged(;SCtype="log")
         FC_Array = FC_Array
@@ -7,7 +7,12 @@ function networksetup(c;digits=3,type_SC="paulData",N=2,density=1)
         lags = round.(lags,digits=digits) 
         #lags[lags.<0.003] .= 0.000
         #lags[SC .< 0.018] .= 0  
-        SC = 0.01SC_Array[:,:,1]
+        if normalise == false
+            SC = 0.01SC_Array[:,:,1]
+        else
+            SC = SC_Array[:,:,1]
+            SC = SC/maximum(SC)
+        end
         minSC,W_sum=getMinSC_and_Wsum(SC)
         N = size(SC,1)
         return SC,dist,lags,N,minSC,W_sum,FC_Array

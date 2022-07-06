@@ -2,9 +2,12 @@ using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistic
 HOMEDIR=homedir()
 
 @static if Sys.islinux() 
-    using ThreadPinning,MKL
-    ThreadPinning.mkl_set_dynamic(0)
-    pinthreads(:compact)
+    using MKL
+    if Threads.nthreads() > 1 
+        using ThreadPinning
+        ThreadPinning.mkl_set_dynamic(0)
+        pinthreads(:compact)
+    end
 end
 
 numThreads = Threads.nthreads()
@@ -12,7 +15,6 @@ if numThreads > 1
     LinearAlgebra.BLAS.set_num_threads(1)
 end
 BLASThreads = LinearAlgebra.BLAS.get_num_threads()
-
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
 
@@ -23,9 +25,6 @@ nVec2 = 1
 #kappa_vec = LinRange(0.3,0.6,nVec2)
 fitnessVec = zeros(nVec1,nVec2)
 for i = 1:nVec1; for j = 1:nVec2;
-
-    
-    
     global nWindows = 2
     global tWindows = 300
     global type_SC = "pauldata"
@@ -43,9 +42,7 @@ for i = 1:nVec1; for j = 1:nVec2;
     if numThreads == 1
         global multi_thread = "off"
     end
-
     println("Running trial for: η0E = ",eta_0E," κ = ", kappa)
-
     global c = 12000
 
     include("$HOMEDIR/COMP_paper/NextGeneration/RunNextGenBase.jl")

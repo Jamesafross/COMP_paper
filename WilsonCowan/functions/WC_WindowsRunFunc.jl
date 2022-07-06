@@ -42,7 +42,7 @@ function wilsoncowan_windows_run()
         else
             prob = SDDEProblem(WC, dW,IC.u0, h2, tspan, p)
         end
-        @time global sol = solve(prob,RKMil(),maxiters = 1e20)
+        @time global sol = solve(prob,EM(),dt=0.005,maxiters = 1e20)
        
         
 

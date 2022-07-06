@@ -107,10 +107,7 @@ mutable struct variousPars
     count::Int64
 end
 
-mutable struct adaptParams
-    tP::Float64
-    HIST::Array{Float64}
-end
+
 
 
 mutable struct weights

@@ -1,17 +1,4 @@
-using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations
-HOMEDIR=homedir()
-
-@static if Sys.islinux() 
-    using ThreadPinning,MKL
-    ThreadPinning.mkl_set_dynamic(0)
-    pinthreads(:compact)
-end
-
-numThreads = Threads.nthreads()
-if numThreads > 1
-    LinearAlgebra.BLAS.set_num_threads(1)
-end
-BLASThreads = LinearAlgebra.BLAS.get_num_threads()
+include("./functions/NextGen_InitSetup.jl")
 
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")

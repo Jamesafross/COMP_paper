@@ -4,9 +4,11 @@ function WC(du,u,h,p,t)
     @unpack cEE,cEI,cIE,cII,τE,τI,τx,Pext,θE,θI,β,η,σ = WCp
     @unpack W,lags,N = nP
     @unpack tPrev,timeAdapt = vP
-    @unpack delays,stimOpt,stimWindow,stimNodes,Tstim,adapt,tWindows,nWindows,ISP = opts
+    @unpack delays,stimOpt,stimWindow,stimNodes,stimStr,Tstim,adapt,tWindows,nWindows,ISP = opts
+    @unpack tP,HIST = aP 
 
-    make_hist_mat2!(h,W,u,hparams,N,lags,t,WHISTMAT)
+
+    make_hist_mat2_threads!(h,W,u,hparams,N,lags,t,WHISTMAT)
     mul!(d,WHISTMAT,ONES)
 
     @inbounds Threads.@threads for i = 1:N
@@ -16,15 +18,15 @@ function WC(du,u,h,p,t)
 
         if  t >= tP && adapt == "on"
               
-            weights.cSEEv[i],weights.cSIEv[i],weights.cSEIv[i],weights.cSIIv[i] = adapt_local_func(h,hparams,t,weights,WCp,E,I,i,N,LR)
+            weights.cEEv[i],weights.cIEv[i],weights.cEIv[i],weights.cIIv[i] = adapt_local_func(h,hparams,t,weights,WCp,E,I,i,N,LR)
 
             if i == N    
                 if mod(vP.count,10) == 0
                     
-                    wS.cSEEv[:,wS.count] = weights.cSEEv
-                    wS.cSIEv[:,wS.count] = weights.cSIEv
-                    wS.cSEIv[:,wS.count] = weights.cSEIv
-                    wS.cSIIv[:,wS.count] = weights.cSIIv
+                    wS.cEEv[:,wS.count] = weights.cEEv
+                    wS.cIEv[:,wS.count] = weights.cIEv
+                    wS.cEIv[:,wS.count] = weights.cEIv
+                    wS.cIIv[:,wS.count] = weights.cIIv
                     wS.count += 1
                 end
                 #nP.W = adapt_global_coupling(hparams,N,W,lags,h,t,u,minSC,W_sum)
@@ -55,6 +57,8 @@ function WC_ISP(du,u,h,p,t)
     @unpack cEE,cEI,cIE,cII,τE,τI,τx,Pext,θE,θI,β,η,σ,τISP,ρ = WCp
     @unpack W,lags,N = nP
     @unpack stimOpt,adapt=opts
+    @unpack tP,HIST = aP 
+
   
     @inbounds for i = 1:N
         d = 0.0

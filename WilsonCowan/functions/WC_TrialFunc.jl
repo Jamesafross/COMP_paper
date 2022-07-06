@@ -1,4 +1,4 @@
-function WC_trials()
+function WC_run_trials()
     for i = 1:nTrials
         println("working on Trial: ",i)
         out =  wilsoncowan_windows_run()

@@ -30,6 +30,7 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticityOpt="on",mode=
     else 
         nSave = 2
     end
+    print(nSave)
     
     κSEEv = ones(N)*NGp.κSEE
     κSIEv = ones(N)*NGp.κSIE
