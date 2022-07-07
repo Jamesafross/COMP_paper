@@ -41,6 +41,13 @@ mutable struct networkParameters
     W_sum::Vector{Float64}
 end
 
+mutable struct fitStruct
+    c
+    eta
+    Pext
+    fit
+end
+
 
 mutable struct dataStruct
 	modelR

@@ -20,12 +20,13 @@ normaliseSC = true
 end
 
 
-nVec1 = 12
-nVec2 = 12
+nVec1 = 5
+nVec2 = 5
 PextVec = SharedArray(Array(LinRange(0.28,0.30,nVec1)))
 etaVec = SharedArray(Array(LinRange(0.18,0.22,nVec2)))
 
-fitVec = SharedArray(zeros(nVec1,nVec2))
+fitArray = SharedArray(zeros(nVec1,nVec2))
+fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2)
 
 @sync @distributed for i = 1:nVec1;
     for j = 1:nVec2
@@ -40,11 +41,18 @@ fitVec = SharedArray(zeros(nVec1,nVec2))
     for j = 1:size(modelFC,3)
         FC_fit_to_data_mean[j] = fit_r(modelFC[:,:,j],mean(FC_Array[:,:,:],dims=3)[:,:])
     end
-    fitVec[i,j] = maximum(FC_fit_to_data_mean)
+    fitArray[i,j] = maximum(FC_fit_to_data_mean)
     end;
 end
 
-plot(fitVec)
+for i = 1:nVec1
+    for j = 1:nVec2
+        fitArrayStruct[i,j] = fitStruct(c,etaVec[j],PextVec[i],fitArray[i,j])
+    end
+end
+
+
+save("$WORKDIR/WilsonCowan_fitVec.jld","fitArrayStruct",fitArrayStruct)
 
 
 
