@@ -7,9 +7,6 @@ function WC(du,u,h,p,t)
     @unpack delays,stimOpt,stimWindow,stimNodes,stimStr,Tstim,adapt,tWindows,nWindows,ISP = opts
     @unpack tP,HIST = aP 
 
-    println(t)
-
-
     make_hist_mat2_threads!(h,W,u,hparams,N,lags,t,WHISTMAT)
     
     mul!(d,WHISTMAT,ONES)

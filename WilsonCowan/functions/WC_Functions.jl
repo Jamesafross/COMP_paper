@@ -132,3 +132,14 @@ end
 
 	
 
+function getModelFC(BOLD_TRIALS,nTrials)
+    modelFC = []
+    for i = 1:nTrials
+        if i == 1
+            modelFC = get_FC(BOLD_TRIALS[:,:,i])/nTrials
+        else
+            modelFC += get_FC(BOLD_TRIALS[:,:,i])/nTrials
+        end
+    end
+    return modelFC
+end

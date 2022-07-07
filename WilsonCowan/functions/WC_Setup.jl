@@ -1,12 +1,13 @@
-function setup(nWindows,tWindows,nTrials;parallel="off",delays="on",plasticityOpt="on",mode="rest",ISP="off",WCpars = WCparams())
+function setup(nWindows,tWindows,nTrials,nP,;parallel="off",delays="on",plasticityOpt="on",mode="rest",ISP="off",WCpars = WCparams())
    #load data and make struct & dist matrices
+   @unpack W, dist,lags, N,minSC,W_sum = nP
    println("setting up Wilson Cowan Model")
 
    plot_fit = "false"
    save_data = "true"
 
-   W=zeros(N,N)
-   W.=SC
+  
+
 
    if lowercase(mode) == lowercase("rest")
       ss = ["off"]
@@ -50,7 +51,7 @@ function setup(nWindows,tWindows,nTrials;parallel="off",delays="on",plasticityOp
    wS =  weightsSave(zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),1)
    IC =  init(rand(3N))
    opts = solverOpts(delays,stimOpt,stimWindow,stimNodes,stimStr,Tstim,plasticityOpt,adapt,tWindows,nWindows,ISP)
-   nP = networkParameters(W, dist,lags, N,minSC,W_sum)
+   
    aP = adaptParams(10.01,IC.u0[1:N])
    vP = variousPars(0.0, 50.0,0)
    bP = ballonModelParameters()

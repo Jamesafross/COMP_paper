@@ -1,30 +1,7 @@
-using LinearAlgebra,Plots,StochasticDelayDiffEq,Parameters,Statistics,StatsBase,DifferentialEquations,JLD,Interpolations,Distributed
-
-@static if Sys.islinux() 
-    using ThreadPinning,MKL
-    ThreadPinning.mkl_set_dynamic(0)
-    pinthreads(:compact)
-end
-
-numThreads = Threads.nthreads()
-if numThreads > 1
-    LinearAlgebra.BLAS.set_num_threads(1)
-end
-BLASThreads = LinearAlgebra.BLAS.get_num_threads()
-
-println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
-
-HOMEDIR=homedir()
-PROGDIR="$HOMEDIR/COMP_paper"
-WORKDIR="$PROGDIR/WilsonCowan"
-InDATADIR="$HOMEDIR/NetworkModels_Data/StructDistMatrices"
-BALLOONDIR="$PROGDIR/Balloon_Model"
-include("$BALLOONDIR/BalloonModel.jl")
-include("$WORKDIR/functions/WC_Headers.jl")
-include("$InDATADIR/getData.jl")
+include("functions/WC_InitSetup.jl")
 
 parallel = "off"
-tWindows = 50
+tWindows = 300
 nWindows = 2
 nTrials = 1
 type_SC = "paulData"
@@ -41,46 +18,40 @@ plotdata = true
 normaliseSC = true
 
 
-WCpars = WCparams(Pext = 0.34,η=0.21)
+nVec1 = 10
+nVec2 = 10
+PextVec = LinRange(0.29,0.30,nVec1)
+etaVec = LinRange(0.19,0.22,nVec2)
 
-for i = 1:3
-include("RunWilsonCowanBase.jl")
-end
+fitVec = zeros(nVec1,nVec2)
+
+for i = 1:nVec1;for j = 1:nVec2
+
+    global WCpars = WCparams(Pext = PextVec[i],η=etaVec[j])
+    global SC,dist,lags,N,minSC,W_sum,FC_Array,BOLD_TRIALS,ss,WCp,vP,aP,start_adapt,nP,bP,LR,IC,weights,wS,opts,WHISTMAT,d,timer,ONES = getSetup()
+    BOLD_TRIALS[:,:,:] = WC_run_trials()
+
+    modelFC = getModelFC(BOLD_TRIALS,nTrials) 
+    FC_fit_to_data_mean = zeros(size(modelFC,3))
+    for j = 1:size(modelFC,3)
+        FC_fit_to_data_mean[j] = fit_r(modelFC[:,:,j],mean(FC_Array[:,:,:],dims=3)[:,:])
+    end
+    fitVec[i,j] = maximum(FC_fit_to_data_mean)
+end;end
 
 
 time_per_second = timer.meanIntegrationTime/tWindows
 print(time_per_second)
 
-    function getModelFC(BOLD_TRIALS,nTrials)
-        modelFC = []
-        for i = 1:nTrials
-            if i == 1
-                modelFC = get_FC(BOLD_TRIALS[:,:,i])/nTrials
-            else
-                modelFC += get_FC(BOLD_TRIALS[:,:,i])/nTrials
-            end
-        end
-        return modelFC
-    end
 
-    modelFC = getModelFC(BOLD_TRIALS,nTrials) 
 
-    if lowercase(type_SC) == "pauldata" && plotdata == true
-        
-        FC_fit_to_data = zeros(size(modelFC,3),size(FC_Array,3))
 
-        FC_fit_to_data_mean = zeros(size(modelFC,3))
 
-        for i = 1:size(modelFC,3)
-            FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i],mean(FC_Array[:,:,:],dims=3)[:,:])
-            for j = 1:size(FC_Array,3)
-                FC_fit_to_data[i,j] = fit_r(modelFC[:,:,i],FC_Array[:,:,j])
-            end
-        end
 
-        println("max fit = ", maximum(FC_fit_to_data_mean))
-        plot(FC_fit_to_data_mean)
-    end
+
+
+plot(fitVec)
+
 
 
 

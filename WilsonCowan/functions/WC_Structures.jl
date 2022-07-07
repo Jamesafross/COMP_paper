@@ -91,5 +91,8 @@ mutable struct weightsSave
     count
 end
 
+#mutable struct SetupStruct
+#end
+
 
 	
