@@ -1,4 +1,4 @@
-using LinearAlgebra,Plots,StochasticDelayDiffEq,Parameters,Statistics,StatsBase,DifferentialEquations,JLD,Interpolations,Distributed,MKL
+using LinearAlgebra,Plots,StochasticDelayDiffEq,Parameters,Statistics,StatsBase,DifferentialEquations,JLD,Interpolations,Distributed
 
 @static if Sys.islinux() 
     using ThreadPinning,MKL
@@ -24,9 +24,9 @@ include("$WORKDIR/functions/WC_Headers.jl")
 include("$InDATADIR/getData.jl")
 
 parallel = "off"
-tWindows = 300
+tWindows = 50
 nWindows = 2
-nTrials = 10
+nTrials = 1
 type_SC = "paulData"
 size_SC =20
 densitySC=0.3
@@ -43,8 +43,9 @@ normaliseSC = true
 
 WCpars = WCparams(Pext = 0.302,η=0.21)
 
-
+for i = 1:3
 include("RunWilsonCowanBase.jl")
+end
 
 
 time_per_second = timer.meanIntegrationTime/tWindows

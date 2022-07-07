@@ -57,6 +57,7 @@ function wilsoncowan_windows_run()
         println("Running Balloon Model")
         global out,endBM = runBalloon(b0,balloonParams,tspanB,BOLD_saveat,N)
         
+        print(size(sol))
     
 
         BOLD_out[:,:,j] = out
