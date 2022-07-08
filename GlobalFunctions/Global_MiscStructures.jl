@@ -1,4 +1,4 @@
-mutable struct Timer
+mutable struct TimerStruct
     meanIntegrationTime
     meanBalloonTime
     meanAllTime
@@ -14,8 +14,9 @@ mutable struct init
    u0
 end
 
-
-mutable struct adaptParams
+mutable struct adaptParameters
+   LearningRate::Float64
+   windowStart::Int
    tP::Float64
    HIST::Array{Float64}
 end

@@ -1,22 +1,22 @@
 include("functions/WC_InitSetupDistributed.jl")
 
 @everywhere begin 
-parallel = "off"
-tWindows = 100
-nWindows = 6
-nTrials = 1
-type_SC = "paulData"
-size_SC =20
-densitySC=0.3
-delay_digits=10
-plasticityOpt="off"
-mode="rest"
-c = 13000
-constant_delay = 0.005
-delays = "on"
-ISP = "off"
-plotdata = true
-normaliseSC = true
+    parallel = "off"
+    tWindows = 100
+    nWindows = 6
+    nTrials = 1
+    type_SC = "paulData"
+    size_SC =20
+    densitySC=0.3
+    delay_digits=10
+    plasticity="off"
+    mode="rest"
+    c = 13000
+    constant_delay = 0.005
+    delays = "on"
+    ISP = "off"
+    plotdata = true
+    normaliseSC = true
 end
 
 
@@ -31,8 +31,13 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2)
 @sync @distributed for i = 1:nVec1;
     for j = 1:nVec2
 
-    global WCpars = WCparams(Pext = PextVec[i],η=etaVec[j])
-    global SC,dist,lags,N,minSC,W_sum,FC_Array,BOLD_TRIALS,ss,WCp,vP,aP,start_adapt,nP,bP,LR,IC,weights,wS,opts,WHISTMAT,d,timer,ONES = getSetup()
+    global WCp = WCparams(Pext = PextVec[i],η=etaVec[j])
+    SC,dist,lags,N,minSC,W_sum,FC_Array = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC,normalise=normaliseSC)
+    lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay
+    W = zeros(N,N)
+    W.=SC
+    nP = networkParameters(W, dist,lags, N,minSC,W_sum)
+    global BOLD_TRIALS,solverStruct = setup(nWindows,tWindows,nTrials,nP;parallel="off",delays="on",plasticity="on",mode="rest",ISP="off",WCpars = WCp)
     BOLD_TRIALS[:,:,:] = WC_run_trials()
     println("Done Trials!")
 

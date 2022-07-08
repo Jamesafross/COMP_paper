@@ -1,15 +1,20 @@
 function WC(du,u,h,p,t)
     hparams = p
-
+    @unpack WCp,nP,bP,IC,weights,wS,stimOpts,runOpts,solverOpts,runPars,adaptPars,nRuns,timer = solverStruct
     @unpack cEE,cEI,cIE,cII,τE,τI,τx,Pext,θE,θI,β,η,σ = WCp
     @unpack W,lags,N = nP
-    @unpack tPrev,timeAdapt = vP
-    @unpack delays,stimOpt,stimWindow,stimNodes,stimStr,Tstim,adapt,tWindows,nWindows,ISP = opts
-    @unpack tP,HIST = aP 
+    @unpack W, dist,lags,N,minSC,W_sum = nP
+    @unpack stimOpt,stimWindow,stimNodes,stimStr,Tstim = stimOpts
+    @unpack StimSwitcher,tWindows,nWindows = runOpts
+    @unpack delays,plasticity,adapt = solverOpts
+    @unpack counter,WHISTMAT,d = runPars
+
+    @unpack W,lags,N = nP
+    @unpack LearningRate,tP,HIST = adaptPars
 
     make_hist_mat2_threads!(h,W,u,hparams,N,lags,t,WHISTMAT)
     
-    mul!(d,WHISTMAT,ONES)
+    sum!(d,WHISTMAT)
 
     @inbounds Threads.@threads for i = 1:N
 
@@ -18,21 +23,21 @@ function WC(du,u,h,p,t)
 
         if  t >= tP && adapt == "on"
               
-            weights.cEEv[i],weights.cIEv[i],weights.cEIv[i],weights.cIIv[i] = adapt_local_func(h,hparams,t,weights,WCp,E,I,i,N,LR)
+            solverStruct.weights.cEEv[i],solverStruct.weights.cIEv[i],solverStruct.weights.cEIv[i],solverStruct.weights.cIIv[i] = adapt_local_func(h,hparams,t,weights,WCp,E,I,i,N,LearningRate)
 
             if i == N    
-                if mod(vP.count,10) == 0
+                if mod(runPars.counter,10) == 0
                     
-                    wS.cEEv[:,wS.count] = weights.cEEv
-                    wS.cIEv[:,wS.count] = weights.cIEv
-                    wS.cEIv[:,wS.count] = weights.cEIv
-                    wS.cIIv[:,wS.count] = weights.cIIv
-                    wS.count += 1
+                    solverStruct.wS.cEEv[:,wS.count] = weights.cEEv
+                    solverStruct.wS.cIEv[:,wS.count] = weights.cIEv
+                    solverStruct.wS.cEIv[:,wS.count] = weights.cEIv
+                    solverStruct.wS.cIIv[:,wS.count] = weights.cIIv
+                    solverStruct.wS.count += 1
                 end
                 #nP.W = adapt_global_coupling(hparams,N,W,lags,h,t,u,minSC,W_sum)
-                aP.tP += 0.01  
-                aP.tP = round(aP.tP,digits=2)
-                vP.count += 1
+                solverStruct.adaptPars.tP += 0.01  
+                solverStruct.adaptPars.tP = round(adaptPars.tP,digits=2)
+                solverStruct.runPars.counter += 1
             end
         end
         #println(d)
@@ -44,6 +49,7 @@ function WC(du,u,h,p,t)
 end
 
 function dW(du,u,h,p,t)
+    @unpack WCp,nP= solverStruct
     @unpack cEE,cEI,cIE,cII,τE,τI,τx,Pext,θE,θI,η,σ = WCp
     @unpack W,lags,N = nP
     for i = 1:N

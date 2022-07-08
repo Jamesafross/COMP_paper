@@ -1,17 +1,18 @@
 include("./functions/NextGen_InitSetup.jl")
 
 
+
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
-nWindows = 2
-tWindows = 300
+nWindows = 10
+tWindows = 200
 type_SC = "pauldata"
 size_SC = 200
 densitySC= 0.3
 delay_digits=6
-plasticityOpt="off"
+plasticity="off"
 mode="rest"  #(rest,stim or rest+stim)
 n_Runs=1
-eta_0E = -16
+eta_0E = -14.0
 kappa = 0.8
 delays = "on"
 multi_thread = "on"
@@ -24,11 +25,28 @@ c = 12000
 
 plotdata = "true"
 
-include("$HOMEDIR/COMP_paper/NextGeneration/RunNextGenBase.jl")
+if lowercase(type_SC) == lowercase("paulData")
+    const SC,dist,lags,N,minSC,W_sum,FC_Array = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
+    lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay
+    println("mean delay = ", mean(lags[lags .> 0.0]))
+else
+    const SC,dist,lags,N,minSC,W_sum = networksetup(;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
+    FC_Array = []
+end
 
 
+const solverStruct =
+setup(numThreads,nWindows,tWindows;delays=delays,mode=mode,plasticity=plasticity)
 
-time_per_second = timer.meanIntegrationTime/tWindows
+if multi_thread == "off"
+    nextgen(du,u,h,p,t) = nextgen_unthreads(du,u,h,p,t)
+else
+    nextgen(du,u,h,p,t) = nextgen_threads(du,u,h,p,t)
+end
+
+run_nextgen()
+
+time_per_second = solverStruct.timer.meanIntegrationTime/tWindows
 print(time_per_second)
 
 if lowercase(type_SC) == "pauldata" && plotdata =="true"

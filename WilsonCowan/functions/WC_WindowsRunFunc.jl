@@ -1,4 +1,10 @@
 function wilsoncowan_windows_run()
+   @unpack WCp,nP,bP,IC,weights,wS,stimOpts,runOpts,solverOpts,runPars,adaptPars,nRuns,timer = solverStruct
+   @unpack W, dist,lags,N,minSC,W_sum = nP
+   @unpack stimOpt,stimWindow,stimNodes,stimStr,Tstim = stimOpts
+   @unpack StimSwitcher,tWindows,nWindows = runOpts
+   @unpack delays,plasticity,adapt= solverOpts
+   @unpack LearningRate,windowStart,tP,HIST = adaptPars
   
   
     BOLD_saveat = collect(0:1.6:tWindows)
@@ -11,24 +17,22 @@ function wilsoncowan_windows_run()
        
         println("working on window ",j)
         if j == 1
-            IC.u0 = 0.1rand(3N)
+            solverStruct.IC.u0 = 0.1rand(3N)
             hparams = IC.u0
         else
             IC.u0 = sol[:,end]
             iStart = findfirst(sol.t .> tWindows - 1.2)
             u_hist = make_uhist(sol.t[iStart:end] .- sol.t[end],sol[:,iStart:end])
             hparams = u_hist
-            vP.tPrev = 0.0 
-            vP.timeAdapt = 0.01
-            vP.count = 0 
-            aP.tP = 0.01
+            solverStruct.runPars.counter = 0 
+            solverStruct.adaptPars.tP = 0.01
         end
 
-        if opts.plasticity == "on"
-            if j < start_adapt
-                global opts.adapt = "off"
+        if solverOpts.plasticity == "on"
+            if j < windowStart
+                global solverStruct.solverOpts.adapt = "off"
             else
-                global opts.adapt = "on"
+                global solverStruct.solverOpts.adapt = "on"
             end
         end
        
@@ -57,8 +61,6 @@ function wilsoncowan_windows_run()
         println("Running Balloon Model")
         global out,endBM = runBalloon(b0,balloonParams,tspanB,BOLD_saveat,N)
         
-        print(size(sol))
-    
 
         BOLD_out[:,:,j] = out
 

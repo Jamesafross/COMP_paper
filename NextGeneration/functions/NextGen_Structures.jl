@@ -54,71 +54,6 @@ end
 NGp1 = NextGen2PopParams()
 NGp2 = NextGen2PopParams2()
 
-
-ParSets = Dict("Pset_1"=>NGp1,"Pset_2"=>NGp2)
-
-@with_kw struct noiseParameters{R}
-    τx::R = 0.1
-    σE::R = 0.1
-    σI::R = 0.1
-end
-
-
-mutable struct networkParameters
-    W::Matrix{Float64}
-    dist::Matrix{Float64}
-    lags::Matrix{Float64}
-    N::Int64
-    minSC::Float64
-    W_sum::Vector{Float64}
-end
-
-
-mutable struct solverOpts
-    delays::String
-    stimOpt::String
-    stimWindow::Real
-    stimNodes::Vector{Real}
-    stimStr::Real
-    Tstim::Vector{Real}
-    plasticity::String
-    adapt::String
-    synapses::String
-    tWindows::Real
-    nWindows::Real
-end
-
-mutable struct dataStruct
-	modelR
-	fit
-	SC
-end
-
-mutable struct pSweepData
-    c
-	κ
-	ηE
-	fit
-end
-
-mutable struct variousPars
-    tPrev::Float64
-    timeAdapt::Float64
-    count::Int64
-end
-
-
-
-
-mutable struct weights
-    κSEEv
-    κSIEv
-    κSEIv
-    κSIIv
-    κSUM
-end
-
-
 @with_kw mutable struct NextGen2PopParams3{R}
     ΔE::R = 0.5
     ΔI::R = 0.5
@@ -145,12 +80,70 @@ end
     κ::R=0.5
  end
 
+
+ParSets = Dict("Pset_1"=>NGp1,"Pset_2"=>NGp2)
+
+@with_kw struct NoiseParameters{R}
+    τx::R = 0.1
+    σE::R = 0.1
+    σI::R = 0.1
+end
+
+
+mutable struct NetworkParameters
+    W::Matrix{Float64}
+    dist::Matrix{Float64}
+    lags::Matrix{Float64}
+    N::Int64
+    minSC::Float64
+    W_sum::Vector{Float64}
+end
+
+mutable struct StimOptions
+    stimOpt::String
+    stimWindow::Real
+    stimNodes::Vector{Real}
+    stimStr::Real
+    Tstim::Vector{Real}
+end
+
+mutable struct RunOptions
+    tWindows::Real
+    nWindows::Real
+    StimSwitcher::Array{String}
+end
+
+mutable struct SolverOptions
+    delays::String
+    plasticity::String
+    adapt::String
+    synapses::String
+end
+
+
+mutable struct RunParameters
+    tPrev::Float64
+    timeAdapt::Float64
+    counter::Int64
+    WHISTMAT::Matrix{Float64}
+    d::Vector{Float64}
+end
+
+mutable struct weights
+    κSEEv::Vector{Real}
+    κSIEv::Vector{Real}
+    κSEIv::Vector{Real}
+    κSIIv::Vector{Real}
+    κSUM::Real
+end
+
+
  mutable struct weightSave
-    κSEEv
-    κSIEv
-    κSEIv
-    κSIIv
-    count
+    κSEEv::Array{Real}
+    κSIEv::Array{Real}
+    κSEIv::Array{Real}
+    κSIIv::Array{Real}
+    count::Int
  end
 
 mutable struct NextGenSol_rest
@@ -164,6 +157,22 @@ end
 mutable struct NextGenSol_reststim
     BOLD_rest
     BOLD_stim
+end
+
+mutable struct NextGenSolverStruct
+    NGp::NextGen2PopParams2
+    nP::NetworkParameters
+    bP::balloonModelParameters
+    IC::init
+    κS::weights
+    wS::weightSave
+    stimOpts::StimOptions
+    runOpts::RunOptions
+    solverOpts::SolverOptions
+    runPars::RunParameters
+    adaptPars::adaptParameters
+    nRuns::Real
+    timer::TimerStruct
 end
 
  

@@ -7,7 +7,7 @@ end
 #includes
 
 @everywhere begin 
-    using LinearAlgebra,Plots,StochasticDelayDiffEq,Parameters,Statistics,StatsBase,DifferentialEquations,JLD,Interpolations,Distributed
+    using LinearAlgebra,Plots,StochasticDelayDiffEq,Statistics,Parameters,DifferentialEquations,JLD,Interpolations,Distributed
 
     HOMEDIR=homedir()
     PROGDIR="$HOMEDIR/COMP_paper"
@@ -17,7 +17,7 @@ end
     include("$BALLOONDIR/BalloonModel.jl")
     include("$WORKDIR/functions/WC_Headers.jl")
     include("$InDATADIR/getData.jl")
-    include("../RunWilsonCowanBaseFunc.jl")
+
 end
 
 

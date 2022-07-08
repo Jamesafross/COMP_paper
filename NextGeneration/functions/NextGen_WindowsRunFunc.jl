@@ -1,7 +1,12 @@
 function nextgen_model_windows_run()
+   @unpack NGp,nP,bP,IC,κS,wS,stimOpts,runOpts,solverOpts,runPars,adaptPars,nRuns,timer = solverStruct
    @unpack W, dist,lags,N,minSC,W_sum = nP
-   @unpack stimOpt,stimWindow,stimNodes,stimStr,Tstim,adapt,synapses,tWindows,nWindows = opts
-    
+   @unpack stimOpt,stimWindow,stimNodes,stimStr,Tstim = stimOpts
+   @unpack StimSwitcher,tWindows,nWindows = runOpts
+   @unpack delays,plasticity,adapt,synapses = solverOpts
+   @unpack LearningRate,windowStart,tP,HIST = adaptPars
+   
+ 
     BOLD_saveat = collect(0:1.6:tWindows)
     size_out = length(BOLD_saveat)
     BOLD_out = zeros(N,size_out,nWindows)
@@ -18,57 +23,53 @@ function nextgen_model_windows_run()
         if j == 1
             hparams = IC.u0
         else
-            IC.u0 = sol[:,end]
+            solverStruct.IC.u0 = sol[:,end]
             iStart = findfirst(sol.t .> tWindows - 1.1)
-            rE0 = sol[1:N,:]
             u_hist = make_uhist(sol.t[iStart:end] .- sol.t[end],sol[1:2N,iStart:end])
             hparams = u_hist
-            vP.tPrev = 0.0 
-            vP.timeAdapt = 0.01
-            vP.count = 0 
-            aP.tP = 0.01
+            solverStruct.runPars.tPrev = 0.0 
+            solverStruct.runPars.timeAdapt = 0.01
+            solverStruct.runPars.counter = 0 
+            solverStruct.adaptPars.tP = 0.01
         end
 
-        if opts.plasticity == "on"
-            if j < start_adapt
-                global opts.adapt = "off"
+        if plasticity == "on"
+            if j < windowStart
+                global solverStruct.solverOpts.adapt = "off"
             else
-                global opts.adapt = "on"
+                global solverStruct.solverOpts.adapt = "on"
             end
         end
        
         tspan = (0.0,tWindows)
         adpStops = collect(0.01:0.01:tWindows)
-        clags = cat(unique(reshape(lags[lags.>0.0],length(lags[lags.>0.0]))),1.0,dims=1)
-
+      
     
-        
-
-        if lowercase(opts.delays) == "on"
+        if lowercase(delays) == "on"
             probDDE = nextgen
-        elseif lowercase(opts.delays) == "off"
+        elseif lowercase(delays) == "off"
             probDDE = nextgen_nodelay
         end
 
         if j == 1
-            if lowercase(opts.delays) == "on"
+            if lowercase(delays) == "on"
                 p = hparams
-                alg = MethodOfSteps(DDEalg)
-                prob = DDEProblem(probDDE,IC.u0, h1, tspan, p)
+                alg = MethodOfSteps(BS3())
+                prob = DDEProblem(probDDE,solverStruct.IC.u0, h1, tspan, p)
             elseif lowercase(opts.delays)=="off"
-                alg = ODEalg
-                prob = ODEProblem(probDDE,IC.u0, tspan)
+                alg = BS3()
+                prob = ODEProblem(probDDE,solverStruct.IC.u0, tspan)
             end
 
             global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
         else
-            if lowercase(opts.delays) == "on"
+            if lowercase(delays) == "on"
                 p = hparams
-                alg = MethodOfSteps(DDEalg)
-                prob = DDEProblem(probDDE,IC.u0, h2, tspan, p)
+                alg = MethodOfSteps(BS3())
+                prob = DDEProblem(probDDE,solverStruct.IC.u0, h2, tspan, p)
             elseif lowercase(opts.delays)=="off"
-                alg = ODEalg
-                prob = ODEProblem(probDDE,IC.u0, tspan)
+                alg = BS3()
+                prob = ODEProblem(probDDE,solverStruct.IC.u0, tspan)
             end
             tic1 = time()
             @time global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)

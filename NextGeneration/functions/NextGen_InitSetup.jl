@@ -5,9 +5,11 @@ WORKDIR="$PROGDIR/NextGeneration"
 BALLOONDIR="$PROGDIR/Balloon_Model"
 InDATADIR="$HOMEDIR/NetworkModels_Data/StructDistMatrices"
 OutDATADIR="$HOMEDIR/NetworkModels_Data/2PopNextGen_Data"
-include("$WORKDIR/functions/NextGen_Headers.jl")
 include("$PROGDIR/GlobalFunctions/Global_Headers.jl")
 include("$BALLOONDIR/BalloonModel.jl")
+include("$WORKDIR/functions/NextGen_Headers.jl")
+
+
 include("$InDATADIR/getData.jl")
 
 @static if Sys.islinux() 

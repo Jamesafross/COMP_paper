@@ -55,31 +55,39 @@ mutable struct dataStruct
 	SC
 end
 
-mutable struct variousPars
-    tPrev::Real
-    timeAdapt::Real
-    count::Int
-end
-
 
 mutable struct modelOpts
     stimOpt::String
     adapt::String
+    ISP::String
 end
 
-
-mutable struct solverOpts
-    delays::String
+mutable struct StimOptions
     stimOpt::String
     stimWindow::Real
     stimNodes::Vector{Real}
     stimStr::Real
     Tstim::Vector{Real}
-    plasticity::String
-    adapt::String
+end
+
+mutable struct RunOptions
     tWindows::Real
     nWindows::Real
+    StimSwitcher::Array{String}
+end
+
+mutable struct SolverOptions
+    delays::String
+    plasticity::String
+    adapt::String
     ISP::String
+end
+
+
+mutable struct RunParameters
+    counter::Int64
+    WHISTMAT::Matrix{Float64}
+    d::Vector{Float64}
 end
 
 mutable struct Weights
@@ -98,8 +106,21 @@ mutable struct weightsSave
     count
 end
 
-#mutable struct SetupStruct
-#end
+mutable struct WilsonCowanSolverStruct
+    WCp
+    nP
+    bP
+    IC
+    weights
+    wS
+    stimOpts
+    runOpts
+    solverOpts
+    runPars
+    adaptPars
+    nRuns
+    timer
+end
 
 
 	

@@ -1,4 +1,4 @@
-@with_kw struct ballonModelParameters{R}
+@with_kw struct balloonModelParameters{R}
     E_0::R = 0.34
     κ::R = 0.65
     γ::R = 0.41
@@ -14,7 +14,7 @@
     k_3::R = 1.0 - ϵ
 end
 
-@with_kw struct ballonModelParameters2{R}
+@with_kw struct balloonModelParameters2{R}
     E_0::R = 0.34
     κ::R = 0.65
     γ::R = 0.41

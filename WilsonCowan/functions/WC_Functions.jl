@@ -39,7 +39,7 @@ f(x::Float64,β::Float64,θ::Float64) = 1/(1+exp(-β*(x-θ)))
 
 
 
-function adapt_local_func(h,hparams,t,κS,NGp,rE,rI,i,N,c;type = "lim")
+function adapt_local_func(h,hparams,t,weights,WCp,rE,rI,i,N,c;type = "lim")
     @unpack cEE,cEI,cIE,cII,τE,τI,τx,Pext,θE,θI,β,η,σ = WCp
     @unpack cEEv,cIEv,cEIv,cIIv,cSUM = weights
     
