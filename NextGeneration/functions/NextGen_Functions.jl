@@ -200,4 +200,14 @@ function dvdt(rA,rB,vA,vB,gAA,gAB,τA,κVAB,VsynAA,VsynAB,η_A0)
 end
 
 
+function R(Z)
+    return (1/(τ*pi))*real( (1-conj(Z)) / (1+conj(Z)) )
+end
+
+function V(Z)
+    return (1/(τ*pi))*real( (1-conj(Z)) / (1+conj(Z)) )
+end
+
+
+
 
