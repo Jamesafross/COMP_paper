@@ -56,14 +56,16 @@ end
 for i = 1:nVec1
     for j = 1:nVec2
         for ij = 1:nVec3
-        fitArrayStruct[i,j] = fitStruct(cVec[ij],etaVec[j],PextVec[i],fitArray[i,j,ij])
+        fitArrayStruct[i,j,ij] = fitStruct(cVec[ij],etaVec[j],PextVec[i],fitArray[i,j,ij])
         end
     end
 end
 
 
+
 save("$WORKDIR/WilsonCowan_fitVec.jld","fitArrayStruct",fitArrayStruct)
 
+print("best fitness found = ",maximum(fitArray))
 
 
     
