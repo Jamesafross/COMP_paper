@@ -1,4 +1,4 @@
-function setup(numThreads,nWindows,tWindows;delays="on",plasticity="on",mode="rest",n_Runs=1,eta_0E = -14.19,kappa=0.505)
+function setup(numThreads,nWindows,tWindows;delays="on",plasticity="on",mode="rest",n_Runs=1,NGp=NextGen2PopParams2())
 
     W=zeros(N,N)
     W.=SC
@@ -23,14 +23,14 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticity="on",mode="re
     timeAdapt = 0.02
     startWindow = 5
 
-    NGp = NextGen2PopParams2()
+   
     
     if lowercase(plasticity) == "on"
         nSave = Int((nWindows-(startWindow-1))*10*tWindows) + 2
     else 
         nSave = 2
     end
-    print(nSave)
+
     
     κSEEv = ones(N)*NGp.κSEE
     κSIEv = ones(N)*NGp.κSIE

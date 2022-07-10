@@ -34,6 +34,8 @@ else
     FC_Array = []
 end
 
+NGp = NextGen2PopParams2()
+
 
 const solverStruct =
 setup(numThreads,nWindows,tWindows;delays=delays,mode=mode,plasticity=plasticity)
