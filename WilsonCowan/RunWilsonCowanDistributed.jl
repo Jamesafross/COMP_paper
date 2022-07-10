@@ -34,7 +34,7 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
     for j = 1:nVec2
         for ij = nVec3
             global WCp = WCparams(Pext = PextVec[i],η=etaVec[j])
-            SC,dist,lags,N,minSC,W_sum,FC_Array = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC,normalise=normaliseSC)
+            SC,dist,lags,N,minSC,W_sum,FC_Array = networksetup(cVec[ij];digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC,normalise=normaliseSC)
             lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay
             W = zeros(N,N)
             W.=SC
