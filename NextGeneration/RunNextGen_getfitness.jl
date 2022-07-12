@@ -1,55 +1,64 @@
-using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations
-
-include("./functions/NextGen_InitSetup.jl")
-println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
-nWindows = 4
-tWindows = 200
-type_SC = "pauldata"
-size_SC = 140
-densitySC= 0.3
-delay_digits=6
-plasticity="off"
-mode="rest"  #(rest,stim or rest+stim)
-n_Runs=1
-eta_0E = -14.8
-kappa = 0.2
-delays = "on"
-multi_thread = "on"
-constant_delay = 0.005
-if numThreads == 1
-    global multi_thread = "off"
-end
-if multi_thread == "off"
-    nextgen(du,u,h,p,t) = nextgen_unthreads(du,u,h,p,t)
-else
-    nextgen(du,u,h,p,t) = nextgen_threads(du,u,h,p,t)
+using Distributed,SharedArrays
+if nprocs() < 4
+    addprocs(4)
+    println("Number of Workers = ", nworkers())
 end
 
-c = 12000
-
-plotdata = "true"
-nVec1 = 5
-eta_0E_vec = LinRange(-14.8,-15.0,nVec1)
-
-nVec2 = 1
-#kappa_vec = LinRange(0.3,0.6,nVec2)
-fitnessVec = zeros(nVec1,nVec2)
-
-if lowercase(type_SC) == lowercase("paulData")
+@everywhere begin 
+    using LinearAlgebra,MAT,JLD,DifferentialEquations,Plots,Random,NLsolve,Statistics,Parameters,Interpolations
+    include("./functions/NextGen_InitSetup.jl")
+    nWindows = 4
+    tWindows = 200
+    type_SC = "pauldata"
+    size_SC = 140
+    densitySC= 0.3
+    delay_digits=6
+    plasticity="off"
+    mode="rest"  #(rest,stim or rest+stim)
+    n_Runs=1
+    eta_0E = -14.8
+    kappa = 0.2
+    delays = "on"
+    multi_thread = "on"
+    constant_delay = 0.005
+    if numThreads == 1
+        global multi_thread = "off"
+    end
+    if multi_thread == "off"
+        nextgen(du,u,h,p,t) = nextgen_unthreads(du,u,h,p,t)
+    else
+        nextgen(du,u,h,p,t) = nextgen_threads(du,u,h,p,t)
+    end
+    c = 7000.
     const SC,dist,lags,N,minSC,W_sum,FC,missingROIs = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
     lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay
-    println("mean delay = ", mean(lags[lags .> 0.0]))
-else
-    const SC,dist,lags,N,minSC,W_sum = networksetup(;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
-    FC_Array = []
+        
+    const solverStruct =
+    setup(numThreads,nWindows,tWindows;delays=delays,mode=mode,plasticity=plasticity)
 end
 
-const solverStruct =
-setup(numThreads,nWindows,tWindows;delays=delays,mode=mode,plasticity=plasticity)
+
+
+
+
+
+
+
+nVec1 = 2
+nVec2 = 2
+nVec3 = 2
+eta_0E_vec = SharedArray(Array(LinRange(-14.8,-15.0,nVec1)))
+kappa_vec = SharedArray(Array(LinRange(0.3,0.6,nVec2)))
+c_vec = SharedArray(Array(LinRange(5000,14000,nVec3)))
+
+fitArray = zeros(nVec1,nVec2,nVec3)
+
+fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
+
 
 
     
-for i = 1:nVec1; 
+@sync @distributed for i = 1:nVec1; 
     for j = 1:nVec2;
         for jj = 1:nVec3
             solverStruct.nP.lags = dist./c_vec[jj]
@@ -58,6 +67,8 @@ for i = 1:nVec1;
 
             solverStruct.NGp.η_0E = eta_0E_vec[i]
             solverStruct.NGp.κ=kappa_vec[j]
+            println(solverStruct.NGp.κ)
+
             solverStruct.timer.meanIntegrationTime = 0.0 
             run_nextgen()
             
@@ -82,14 +93,25 @@ for i = 1:nVec1;
             end
 
 
-            fitnessVec[i,j,jj] = maximum(FC_fit_to_data_mean)
+            fitArray[i,j,jj] = maximum(FC_fit_to_data_mean)
 
         end
-
     end
-end;
+end
 
-print(maximum(fitnessVec))
+
+for i = 1:nVec1
+    for j = 1:nVec2
+        for jj = 1:nVec3
+        fitArrayStruct[i,j,jj] = fitStruct(cVec[jj],eta_0E_vec[i],kappa_vec[j],fitArray[i,j,jj])
+        end
+    end
+end
+
+save("$WORKDIR/WilsonCowan_fitVec.jld","fitArrayStruct",fitArrayStruct)
+
+
+print(maximum(fitArray))
 
 
 

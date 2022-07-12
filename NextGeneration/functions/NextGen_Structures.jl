@@ -175,4 +175,11 @@ mutable struct NextGenSolverStruct
     timer::TimerStruct
 end
 
+mutable struct fitStruct
+    c
+    eta_E0
+    kappa
+    fit
+end
+
  
