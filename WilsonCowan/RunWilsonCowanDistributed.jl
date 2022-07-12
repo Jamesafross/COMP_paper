@@ -43,8 +43,8 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2)
 
     modelFC = getModelFC(BOLD_TRIALS,nTrials) 
     FC_fit_to_data_mean = zeros(size(modelFC,3))
-    for j = 1:size(modelFC,3)
-        FC_fit_to_data_mean[j] = fit_r(modelFC[:,:,j],mean(FC_Array[:,:,:],dims=3)[:,:])
+    for k = 1:size(modelFC,3)
+        FC_fit_to_data_mean[k] = fit_r(modelFC[:,:,k],mean(FC_Array[:,:,:],dims=3)[:,:])
     end
     fitArray[i,j] = maximum(FC_fit_to_data_mean)
     end;
