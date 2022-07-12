@@ -51,7 +51,7 @@ eta_0E_vec = SharedArray(Array(LinRange(-14.8,-15.0,nVec1)))
 kappa_vec = SharedArray(Array(LinRange(0.3,0.6,nVec2)))
 c_vec = SharedArray(Array(LinRange(5000,14000,nVec3)))
 
-fitArray = zeros(nVec1,nVec2,nVec3)
+fitArray = SharedArray(zeros(nVec1,nVec2,nVec3))
 
 fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
 
@@ -67,7 +67,7 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
 
             solverStruct.NGp.η_0E = eta_0E_vec[i]
             solverStruct.NGp.κ=kappa_vec[j]
-            println(solverStruct.NGp.κ)
+            
 
             solverStruct.timer.meanIntegrationTime = 0.0 
             run_nextgen()
@@ -78,8 +78,8 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
             modelFC = get_FC(BOLD.BOLD_rest)
             if size(missingROIs,1) > 0
                 keepElements = ones(N)
-                for i in missingROIs
-                    keepElements .= collect(1:N) != i
+                for ii in missingROIs
+                    keepElements .= collect(1:N) != ii
                 end
 
                 modelFC = modelFC[keepElements,keepElements]
@@ -103,7 +103,7 @@ end
 for i = 1:nVec1
     for j = 1:nVec2
         for jj = 1:nVec3
-        fitArrayStruct[i,j,jj] = fitStruct(cVec[jj],eta_0E_vec[i],kappa_vec[j],fitArray[i,j,jj])
+        fitArrayStruct[i,j,jj] = fitStruct(c_vec[jj],eta_0E_vec[i],kappa_vec[j],fitArray[i,j,jj])
         end
     end
 end
