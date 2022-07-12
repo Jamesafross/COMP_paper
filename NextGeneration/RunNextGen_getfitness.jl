@@ -108,7 +108,7 @@ for i = 1:nVec1
     end
 end
 
-save("$WORKDIR/WilsonCowan_fitVec.jld","fitArrayStruct",fitArrayStruct)
+save("$WORKDIR/NextGen_fitVec.jld","fitArrayStruct",fitArrayStruct)
 
 
 print(maximum(fitArray))
