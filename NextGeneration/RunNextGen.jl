@@ -3,22 +3,22 @@ include("./functions/NextGen_InitSetup.jl")
 
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
-nWindows = 2
-tWindows = 200
+nWindows = 5
+tWindows = 100
 type_SC = "pauldata" #sizes -> [18, 64,140,246,503,673]
-size_SC = 246
+size_SC = 140
 densitySC= 0.3
-delay_digits=6
+delay_digits=2
 plasticity="off"
 mode="rest"  #(rest,stim or rest+stim)
 n_Runs=1
 nFC = 1
 nSC = 1
-eta_0E = -13.
-kappa = 0.5
+eta_0E = -14.8
+kappa = 0.0505
 delays = "on"
 multi_thread = "on"
-constant_delay = 0.005
+constant_delay = 0.00
 if numThreads == 1
     global multi_thread = "off"
 end

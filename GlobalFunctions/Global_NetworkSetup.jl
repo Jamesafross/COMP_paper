@@ -4,6 +4,7 @@ function networksetup(c;digits=3,nSC=2,nFC=1,type_SC="paulData",N=2,density=1,no
         minSC,W_sum=getMinSC_and_Wsum(SC)
         N = size(SC,1)
         lags = dist./c
+        lags = round.(lags,digits=digits)
         return SC,dist,lags,N,minSC,W_sum,FC,missingROIs
     elseif lowercase(type_SC) == lowercase("generated")
         
@@ -44,7 +45,7 @@ function get_stuct_data(;n=1,ROI=140)
         if n > numMats
             @error "There are only $numMats structural matrices in this directory. Please choose n < 5"
         else
-
+            print()
             SC = load("$STRUCTDIR/$(StructMats[n])","$(split(StructMats[n],".")[1])")
 
             SC = log.(SC)
@@ -105,7 +106,7 @@ function get_functonal_data(;n=1,type="control",ROI=140)
         FC = zeros(sizeFC,sizeFC)
 
         numMats = size(FunctionalMats,1)
-        println(numMats)
+        
         for i in FunctionalMats
             FC += load("$FUNCTIONALDIR/$FunctionalDIR/$i","$(split(i,".")[1])")
         
@@ -116,4 +117,29 @@ function get_functonal_data(;n=1,type="control",ROI=140)
     else
         @error "no such ROI size, choose an ROI in [18,64,140,246,503,673]"
     end
+end
+
+function get_mean_all_functional_data(;ROI=140,type="control")
+    HOMEDIR = homedir()
+    ROIDIR = "ROI"*"$ROI"
+    DATADIR = "$HOMEDIR/PaulJuliaData_ALL/Functional"
+    if lowercase(type) == "control"
+        FUNCTIONALDIR="$DATADIR/$ROIDIR/Control_Groups"
+    elseif lowercase(type) == "stimulated"
+        FUNCTIONALDIR="$DATADIR/$ROIDIR/Stimulated_Groups"
+    end
+    A = []
+    missingROI = []
+    ngroups = length(readdir(FUNCTIONALDIR))
+    
+    for i = 1:ngroups
+ 
+        FC_GROUP,missingROIs = get_functonal_data(;n=i,type=type,ROI=ROI)
+        missingROI = cat(missingROI,missingROIs,dims=2)
+
+        A = cat(A,[FC_GROUP],dims=1)
+    end
+   return A
+
+
 end
