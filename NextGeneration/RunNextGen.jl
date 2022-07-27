@@ -6,7 +6,7 @@ println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLA
 nWindows = 2
 tWindows = 200
 type_SC = "pauldata" #sizes -> [18, 64,140,246,503,673]
-size_SC = 140
+size_SC = 246
 densitySC= 0.3
 delay_digits=6
 plasticity="off"
@@ -14,7 +14,7 @@ mode="rest"  #(rest,stim or rest+stim)
 n_Runs=1
 nFC = 1
 nSC = 1
-eta_0E = -14.1
+eta_0E = -13.
 kappa = 0.5
 delays = "on"
 multi_thread = "on"
@@ -74,7 +74,7 @@ if lowercase(type_SC) == "pauldata" && plotdata =="true"
     end
 
     print(FC_fit_to_data_mean)
-plot(FC_fit_to_data_mean)
+    plot(FC_fit_to_data_mean)
 
     end
 

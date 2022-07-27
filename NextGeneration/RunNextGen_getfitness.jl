@@ -16,7 +16,7 @@ end
     plasticity="off"
     mode="rest"  #(rest,stim or rest+stim)
     n_Runs=1
-    eta_0E = -14.8
+    eta_0E = -13
     kappa = 0.2
     delays = "on"
     multi_thread = "on"
