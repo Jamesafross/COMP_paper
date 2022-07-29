@@ -3,22 +3,22 @@ include("./functions/NextGen_InitSetup.jl")
 
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
-nWindows = 5
+nWindows = 8
 tWindows = 100
 type_SC = "pauldata" #sizes -> [18, 64,140,246,503,673]
 size_SC = 140
 densitySC= 0.3
-delay_digits=2
+delay_digits=5
 plasticity="off"
 mode="rest"  #(rest,stim or rest+stim)
 n_Runs=1
 nFC = 1
 nSC = 1
-eta_0E = -14.8
-kappa = 0.0505
+eta_0E = -14.75
+kappa = 0.0504
 delays = "on"
 multi_thread = "on"
-constant_delay = 0.00
+constant_delay = 0.002
 if numThreads == 1
     global multi_thread = "off"
 end
@@ -32,7 +32,7 @@ plotdata = "true"
 if lowercase(type_SC) == lowercase("paulData")
     const SC,dist,lags,N,minSC,W_sum,FC,missingROIs = networksetup(c;digits=delay_digits,nSC=nSC,nFC=nFC,type_SC=type_SC,N=size_SC,density=densitySC)
     lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay
-    println("mean delay = ", mean(lags[lags .> 0.0]))
+    println("mean delay = ", mean(lags[SC .> 0.0]))
 else
     const SC,dist,lags,N,minSC,W_sum = networksetup(;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
     FC_Array = []
