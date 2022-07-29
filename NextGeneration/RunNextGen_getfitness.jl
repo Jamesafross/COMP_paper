@@ -1,6 +1,6 @@
 using Distributed,SharedArrays
-if nprocs() < 4
-    addprocs(4)
+if nprocs() < 20
+    addprocs(20)
     println("Number of Workers = ", nworkers())
 end
 
@@ -47,11 +47,11 @@ end
 
 
 
-nVec1 = 2
-nVec2 = 2
-nVec3 = 2
-eta_0E_vec = SharedArray(Array(LinRange(-14.0,-15.0,nVec1)))
-kappa_vec = SharedArray(Array(LinRange(0.04,0.05,nVec2)))
+nVec1 = 40
+nVec2 = 20
+nVec3 = 10
+eta_0E_vec = SharedArray(Array(LinRange(-13.5,-15.1,nVec1)))
+kappa_vec = SharedArray(Array(LinRange(0.01,0.06,nVec2)))
 c_vec = SharedArray(Array(LinRange(5000,14000,nVec3)))
 
 fitArray = SharedArray(zeros(nVec1,nVec2,nVec3))
@@ -79,7 +79,7 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
             print(time_per_second)
 
          
-            if lowercase(type_SC) == "pauldata" && plotdata =="true"
+            if lowercase(type_SC) == "pauldata" 
                 modelFC = get_FC(BOLD.BOLD_rest)
                 if size(missingROI,1) > 0
                     keepElements = ones(N)
