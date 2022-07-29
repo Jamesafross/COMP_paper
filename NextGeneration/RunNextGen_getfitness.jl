@@ -20,7 +20,10 @@ end
     kappa = 0.2
     delays = "on"
     multi_thread = "on"
-    constant_delay = 0.005
+    constant_delay = 0.002
+    meanFC,missingROI = get_mean_all_functional_data(;ROI=140,type="control")
+
+
     if numThreads == 1
         global multi_thread = "off"
     end
@@ -47,8 +50,8 @@ end
 nVec1 = 2
 nVec2 = 2
 nVec3 = 2
-eta_0E_vec = SharedArray(Array(LinRange(-14.8,-15.0,nVec1)))
-kappa_vec = SharedArray(Array(LinRange(0.3,0.6,nVec2)))
+eta_0E_vec = SharedArray(Array(LinRange(-14.0,-15.0,nVec1)))
+kappa_vec = SharedArray(Array(LinRange(0.04,0.05,nVec2)))
 c_vec = SharedArray(Array(LinRange(5000,14000,nVec3)))
 
 fitArray = SharedArray(zeros(nVec1,nVec2,nVec3))
@@ -75,22 +78,27 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
             time_per_second = solverStruct.timer.meanIntegrationTime/tWindows
             print(time_per_second)
 
-            modelFC = get_FC(BOLD.BOLD_rest)
-            if size(missingROIs,1) > 0
-                keepElements = ones(N)
-                for ii in missingROIs
-                    keepElements .= collect(1:N) != ii
+         
+            if lowercase(type_SC) == "pauldata" && plotdata =="true"
+                modelFC = get_FC(BOLD.BOLD_rest)
+                if size(missingROI,1) > 0
+                    keepElements = ones(N)
+                    for i in missingROI
+                        keepElements .= collect(1:N) != i
+                    end
+
+                    modelFC = modelFC[keepElements,keepElements]
                 end
 
-                modelFC = modelFC[keepElements,keepElements]
+
+                FC_fit_to_data_mean = zeros(size(modelFC,3))
+
+                for i = 1:size(modelFC,3)
+                    FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i],meanFC)
+                end
+
             end
 
-
-            FC_fit_to_data_mean = zeros(size(modelFC,3))
-
-            for k = 1:size(modelFC,3)
-                FC_fit_to_data_mean[k] = fit_r(modelFC[:,:,k],FC)
-            end
 
 
             fitArray[i,j,jj] = maximum(FC_fit_to_data_mean)

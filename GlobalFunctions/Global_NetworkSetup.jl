@@ -139,7 +139,35 @@ function get_mean_all_functional_data(;ROI=140,type="control")
 
         A = cat(A,[FC_GROUP],dims=1)
     end
-   return A
+    
+    missingROI = unique(missingROI)
+    newROI = ROI-size(missingROI,1)
+    meanFC = zeros(newROI,newROI)
+    
+    
+    if size(missingROI,1) > 0
+        keepElements = Int.(ones(N))
+        for i in missingROIs
+            keepElements .= collect(1:N) != i
+        end
+        for i = 1:ngroups
+            meanFC += A[i][keepElements,keepElements]/ngroups
+        end
+    else
+        for i = 1:ngroups
+            meanFC += A[i]/ngroups
+        end
+        
+    end
+
+    
+
+   
+
+
+    
+    
+    return meanFC,missingROI
 
 
 end

@@ -3,7 +3,7 @@ include("./functions/NextGen_InitSetup.jl")
 
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
-nWindows = 8
+nWindows = 5
 tWindows = 100
 type_SC = "pauldata" #sizes -> [18, 64,140,246,503,673]
 size_SC = 140
@@ -14,7 +14,7 @@ mode="rest"  #(rest,stim or rest+stim)
 n_Runs=1
 nFC = 1
 nSC = 1
-eta_0E = -14.75
+eta_0E = -14.7
 kappa = 0.0504
 delays = "on"
 multi_thread = "on"
@@ -53,12 +53,14 @@ run_nextgen()
 
 time_per_second = solverStruct.timer.meanIntegrationTime/tWindows
 print(time_per_second)
+meanFC,missingROI = get_mean_all_functional_data(;ROI=140,type="control")
+
 
 if lowercase(type_SC) == "pauldata" && plotdata =="true"
     modelFC = get_FC(BOLD.BOLD_rest)
-    if size(missingROIs,1) > 0
+    if size(missingROI,1) > 0
         keepElements = ones(N)
-        for i in missingROIs
+        for i in missingROI
             keepElements .= collect(1:N) != i
         end
 
@@ -69,14 +71,16 @@ if lowercase(type_SC) == "pauldata" && plotdata =="true"
     FC_fit_to_data_mean = zeros(size(modelFC,3))
 
     for i = 1:size(modelFC,3)
-        FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i],FC)
-       
+        FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i],meanFC)
     end
 
-    print(FC_fit_to_data_mean)
+
+    print("best fitness = ", maximum(FC_fit_to_data_mean))
     plot(FC_fit_to_data_mean)
 
-    end
+end
+
+
 
 
 
