@@ -1,6 +1,6 @@
 using Distributed,SharedArrays
-if nprocs() < 20
-    addprocs(20)
+if nprocs() < 18
+    addprocs(18)
     println("Number of Workers = ", nworkers())
 end
 

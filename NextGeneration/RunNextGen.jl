@@ -58,6 +58,9 @@ meanFC,missingROI = get_mean_all_functional_data(;ROI=140,type="control")
 
 if lowercase(type_SC) == "pauldata" && plotdata =="true"
     modelFC = get_FC(BOLD.BOLD_rest)
+    if mode == "rest+stim"
+        modelFC = modelFC = get_FC(BOLD.BOLD_stim)
+    end
     if size(missingROI,1) > 0
         keepElements = ones(N)
         for i in missingROI
@@ -71,14 +74,17 @@ if lowercase(type_SC) == "pauldata" && plotdata =="true"
     FC_fit_to_data_mean = zeros(size(modelFC,3))
 
     for i = 1:size(modelFC,3)
-        FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i],meanFC)
+        FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i].^2,meanFC.^2)
     end
 
 
     print("best fitness = ", maximum(FC_fit_to_data_mean))
-    plot(FC_fit_to_data_mean)
+
 
 end
+
+save("./saved_data/modelFC_stim.jl","modelFC_stim",modelFC_stim)
+save("./saved_data/modelFC_stim.jl","modelFC_stim",modelFC_stim)
 
 
 
