@@ -1,4 +1,4 @@
-function nextgen_model_windows_run()
+function nextgen_model_windows_run(solverStruct)
    @unpack NGp,nP,bP,IC,κS,wS,stimOpts,runOpts,solverOpts,runPars,adaptPars,nRuns,timer = solverStruct
    @unpack W, dist,lags,N,minSC,W_sum = nP
    @unpack stimOpt,stimWindow,stimNodes,stimStr,Tstim = stimOpts
@@ -54,7 +54,7 @@ function nextgen_model_windows_run()
 
         if j == 1
             if lowercase(delays) == "on"
-                p = hparams
+                p = hparams,solverStruct
                 alg = MethodOfSteps(BS3())
                 prob = DDEProblem(probDDE,solverStruct.IC.u0, h1, tspan, p)
             elseif lowercase(opts.delays)=="off"
@@ -65,7 +65,7 @@ function nextgen_model_windows_run()
             global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops,saveat=0.01,reltol=1e-3,abstol=1e-6)
         else
             if lowercase(delays) == "on"
-                p = hparams
+                p = hparams,solverStruct
                 alg = MethodOfSteps(BS3())
                 prob = DDEProblem(probDDE,solverStruct.IC.u0, h2, tspan, p)
             elseif lowercase(opts.delays)=="off"

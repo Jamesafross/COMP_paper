@@ -16,7 +16,7 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticity="on",mode="re
     stimNodes = [39]
     Tstim = [60,90]
     stimStr = -5.
-    stimWindow = 20
+    stimWindow = 10
     adapt = "off"
     synapses = "1stOrder"
     tPrev = 0.01

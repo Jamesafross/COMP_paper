@@ -1,4 +1,4 @@
-function run_nextgen()
+function run_nextgen(solverStruct)
     @unpack NGp,nP,bP,IC,κS,wS,stimOpts,runOpts,solverOpts,runPars,adaptPars,nRuns,timer = solverStruct
    
     
@@ -22,7 +22,7 @@ function run_nextgen()
         solverStruct.stimOpts.stimOpt = setstim
 
         println("Running model ... ")
-        @time out = nextgen_model_windows_run()
+        @time out = nextgen_model_windows_run(solverStruct)
 
         BOLD_OUT=[]
         for ii = 1:runOpts.nWindows
@@ -59,5 +59,7 @@ function run_nextgen()
     elseif lowercase(mode) == "rest+stim"
         global BOLD = NextGenSol_reststim(BOLD_REST.BOLD_rest,BOLD_STIM.BOLD_stim)
     end
+
+    return BOLD
 
 end

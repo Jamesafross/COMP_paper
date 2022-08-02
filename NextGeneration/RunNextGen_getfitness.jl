@@ -36,7 +36,7 @@ end
     const SC,dist,lags,N,minSC,W_sum,FC,missingROIs = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
     lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay
         
-    const solverStruct =
+    solverStruct =
     setup(numThreads,nWindows,tWindows;delays=delays,mode=mode,plasticity=plasticity)
 end
 
@@ -73,7 +73,7 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
             
 
             solverStruct.timer.meanIntegrationTime = 0.0 
-            run_nextgen()
+            BOLD = run_nextgen(solverStruct)
             
             time_per_second = solverStruct.timer.meanIntegrationTime/tWindows
             print(time_per_second)
@@ -94,7 +94,7 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
                 FC_fit_to_data_mean = zeros(size(modelFC,3))
 
                 for i = 1:size(modelFC,3)
-                    FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i],meanFC)
+                    FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i].^2,meanFC.^2)
                 end
 
             end

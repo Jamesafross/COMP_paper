@@ -49,7 +49,7 @@ else
     nextgen(du,u,h,p,t) = nextgen_threads(du,u,h,p,t)
 end
 
-run_nextgen()
+BOLD = run_nextgen(solverStruct)
 
 time_per_second = solverStruct.timer.meanIntegrationTime/tWindows
 print(time_per_second)
