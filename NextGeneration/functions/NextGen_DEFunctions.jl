@@ -35,7 +35,7 @@
        
         if  t >= tP && adapt == "on"
               
-            solverStruct.κS.κSEEv[i],solverStruct.κS.κSIEv[i],solverStruct.κS.κSEIv[i],solverStruct.κS.κSIIv[i] = adapt_local_func(h,hparams,t,κS,NGp,u[i],u[i+N],i,N,LearningRate)
+            solverStruct.κS.κSEEv[i],solverStruct.κS.κSIEv[i],solverStruct.κS.κSEIv[i],solverStruct.κS.κSIIv[i] = adapt_local_func2(h,hparams,t,κS,NGp,u[i],u[i+N],i,N,LearningRate)
 
             if i == N    
                 if mod(runPars.counter,10) == 0

@@ -38,13 +38,13 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticity="on",mode="re
     κSIIv = ones(N)*NGp.κSII
     κSUM = κSEEv[1]+κSIEv[1]+κSEIv[1]+κSIIv[1]
 
-    init0 = make_init_conds(NGp,N)  + 0.1*rand(8N)
+    init0 = round.(make_init_conds(NGp,N),digits=4)
 
     nP = NetworkParameters(W, dist,lags, N, minSC,W_sum)
     bP = balloonModelParameters()
 
-    LR = 0.01 # learning rate adaptation
-    IC =  init(init0)
+    LR = 0.0001 # learning rate adaptation
+    IC = init(init0)
     κS = weights(κSEEv, κSIEv, κSEIv, κSIIv, κSUM )
     wS = weightSave(zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),1)
    

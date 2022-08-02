@@ -85,6 +85,32 @@ function adapt_local_func(h,hparams,t,κS,NGp,rE,rI,i,N,c;type = "lim")
 end
 
 
+function adapt_local_func2(h,hparams,t,κS,NGp,rE,rI,i,N,c;type = "lim")
+    @unpack ΔE,ΔI,η_0E,η_0I,τE,τI,αEE,αIE,αEI,αII,κSEE,κSIE,κSEI,
+    κSII,κVEE,κVIE,κVEI,κVII,VsynEE,VsynIE,VsynEI,VsynII,κ = NGp
+    @unpack κSEEv,κSIEv,κSEIv,κSIIv,κSUM = κS
+    
+    ΔκSEE = c*rE*(rE - h(hparams,t-1.0;idxs = i))
+    ΔκSIE = c*rE*(rI - h(hparams,t-1.0;idxs = i+N))
+    ΔκSEI = c*rI*(rE - h(hparams,t-1.0;idxs = i))
+    ΔκSII = c*rI*(rI - h(hparams,t-1.0;idxs = i+N))
+
+    κSEEv[i] = (κSEEv[i] + ΔκSEE*adapt_contain_function(ΔκSEE,κSEE))
+    κSIEv[i] = (κSIEv[i] + ΔκSIE*adapt_contain_function(ΔκSIE,κSIE))
+    κSEIv[i] = (κSEIv[i] + ΔκSEI*adapt_contain_function(ΔκSEI,κSEI))
+    κSIIv[i] = (κSIIv[i] + ΔκSII*adapt_contain_function(ΔκSII,κSII))
+    
+  
+
+return κSEEv[i],κSIEv[i],κSEIv[i],κSIIv[i]
+end
+
+function adapt_contain_function(Δκ,κ)
+    return (exp(-abs( κ + (Δκ))))
+end
+
+
+
 function adapt_local_func_nodelay(κS,NGp,rE,rI,i,c;type = "lim")
     @unpack ΔE,ΔI,η_0E,η_0I,τE,τI,αEE,αIE,αEI,αII,κSEE,κSIE,κSEI,
     κSII,κVEE,κVIE,κVEI,κVII,VsynEE,VsynIE,VsynEI,VsynII,κ = NGp

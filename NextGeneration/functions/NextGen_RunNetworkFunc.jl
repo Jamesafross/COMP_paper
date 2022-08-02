@@ -1,6 +1,6 @@
 function run_nextgen()
     @unpack NGp,nP,bP,IC,κS,wS,stimOpts,runOpts,solverOpts,runPars,adaptPars,nRuns,timer = solverStruct
-    IC.u0 = make_init_conds(NGp,nP.N)  + 0.1*rand(8*nP.N)
+   
     
 
     for setstim in runOpts.StimSwitcher
@@ -10,7 +10,7 @@ function run_nextgen()
         solverStruct.κS.κSEIv = ones(nP.N)*NGp.κSEI
         solverStruct.κS.κSIIv = ones(nP.N)*NGp.κSII
         solverStruct.κS.κSUM  = κS.κSEEv[1]+κS.κSIEv[1]+κS.κSEIv[1]+κS.κSIIv[1]
-        solverStruct.IC.u0 = make_init_conds(NGp,N)  + 0.1*rand(8N)
+        solverStruct.IC.u0 = round.(make_init_conds(NGp,N),digits=4) 
         
         
         solverStruct.wS.κSEEv[:,1] = solverStruct.κS.κSEEv
