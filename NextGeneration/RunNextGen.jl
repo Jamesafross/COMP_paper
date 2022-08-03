@@ -3,7 +3,7 @@ include("./functions/NextGen_InitSetup.jl")
 
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
-nWindows = 40 #stimulation starts at window 10
+nWindows = 2 #stimulation starts at window 10
 tWindows = 60
 type_SC = "pauldata" #sizes -> [18, 64,140,246,503,673]
 size_SC = 140
@@ -83,7 +83,7 @@ if lowercase(type_SC) == "pauldata" && plotdata =="true"
 
 end
 
-save("./saved_data/modelFC_stim.jld","modelFC",modelFC)
+save("./saved_data/modelFC.jld","modelFC",modelFC)
 if mode == "rest+stim"
 save("./saved_data/modelFC_stim.jld","modelFC_stim",modelFC_stim)
 end
