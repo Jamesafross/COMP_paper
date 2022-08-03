@@ -22,13 +22,7 @@ end
     multi_thread = "on"
     constant_delay = 0.002
     meanFC,missingROI = get_mean_all_functional_data(;ROI=140,type="control")
-
-
- 
     nextgen(du,u,h,p,t) = nextgen_unthreads(du,u,h,p,t)
-    
-   
-    
 end
 
 
@@ -93,10 +87,7 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
 
             end
 
-
-
             fitArray[i,j,jj] = maximum(FC_fit_to_data_mean)
-
         end
     end
 end
