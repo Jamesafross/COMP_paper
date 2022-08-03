@@ -143,7 +143,8 @@ function get_mean_all_functional_data(;ROI=140,type="control")
     missingROI = unique(missingROI)
     newROI = ROI-size(missingROI,1)
     meanFC = zeros(newROI,newROI)
-    
+
+
     
     if size(missingROI,1) > 0
         keepElements = Int.(ones(N))
@@ -162,10 +163,6 @@ function get_mean_all_functional_data(;ROI=140,type="control")
 
     
 
-   
-
-
-    
     
     return meanFC,missingROI
 
