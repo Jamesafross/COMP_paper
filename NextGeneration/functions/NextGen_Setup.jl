@@ -38,7 +38,7 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticity="on",mode="re
     κSIIv = ones(N)*NGp.κSII
     κSUM = κSEEv[1]+κSIEv[1]+κSEIv[1]+κSIIv[1]
 
-    init0 = round.(make_init_conds(NGp,N),digits=4)
+    global init0 = round.(make_init_conds(NGp,N),digits=4) + 0.001randn(8*N)
 
     nP = NetworkParameters(W, dist,lags, N, minSC,W_sum)
     bP = balloonModelParameters()

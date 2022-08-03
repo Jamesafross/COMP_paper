@@ -10,7 +10,7 @@ function run_nextgen(solverStruct)
         solverStruct.κS.κSEIv = ones(nP.N)*NGp.κSEI
         solverStruct.κS.κSIIv = ones(nP.N)*NGp.κSII
         solverStruct.κS.κSUM  = κS.κSEEv[1]+κS.κSIEv[1]+κS.κSEIv[1]+κS.κSIIv[1]
-        solverStruct.IC.u0 = round.(make_init_conds(NGp,N),digits=4) 
+        solverStruct.IC.u0 = init0
         
         
         solverStruct.wS.κSEEv[:,1] = solverStruct.κS.κSEEv
