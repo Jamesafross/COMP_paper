@@ -1,3 +1,0 @@
-SC_1
-fits best with 
-FC: 4,11,22,20,21,26

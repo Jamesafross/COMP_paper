@@ -40,7 +40,7 @@ end
 
 
 
-const solverStruct =
+solverStruct =
 setup(numThreads,nWindows,tWindows;delays=delays,mode=mode,plasticity=plasticity,NGp=NGp)
 
 if multi_thread == "off"
@@ -59,7 +59,7 @@ meanFC,missingROI = get_mean_all_functional_data(;ROI=140,type="control")
 if lowercase(type_SC) == "pauldata" && plotdata =="true"
     modelFC = get_FC(BOLD.BOLD_rest)
     if mode == "rest+stim"
-        modelFC = modelFC = get_FC(BOLD.BOLD_stim)
+        modelFC_stim = modelFC_stim = get_FC(BOLD.BOLD_stim)
     end
     if size(missingROI,1) > 0
         keepElements = ones(N)
@@ -83,7 +83,7 @@ if lowercase(type_SC) == "pauldata" && plotdata =="true"
 
 end
 
-save("./saved_data/modelFC_stim.jl","modelFC_stim",modelFC_stim)
+save("./saved_data/modelFC.jl","modelFC",modelFC)
 save("./saved_data/modelFC_stim.jl","modelFC_stim",modelFC_stim)
 
 
