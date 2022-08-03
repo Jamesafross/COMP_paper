@@ -1,6 +1,6 @@
 using Distributed,SharedArrays
-if nprocs() < 10
-    addprocs(10)
+if nprocs() < 18
+    addprocs(18)
     println("Number of Workers = ", nworkers())
 end
 
@@ -24,13 +24,20 @@ end
     meanFC,missingROI = get_mean_all_functional_data(;ROI=140,type="control")
 
 
-  
-    nextgen(du,u,h,p,t) = nextgen_unthreads(du,u,h,p,t)
-  
+    if numThreads == 1
+        global multi_thread = "off"
+    end
+    if multi_thread == "off"
+        nextgen(du,u,h,p,t) = nextgen_unthreads(du,u,h,p,t)
+    else
+        nextgen(du,u,h,p,t) = nextgen_threads(du,u,h,p,t)
+    end
     c = 7000.
-
+    const SC,dist,lags,N,minSC,W_sum,FC,missingROIs = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
+    lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay
         
-  
+    solverStruct =
+    setup(numThreads,nWindows,tWindows;delays=delays,mode=mode,plasticity=plasticity)
 end
 
 
@@ -57,10 +64,6 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
 @sync @distributed for i = 1:nVec1; 
     for j = 1:nVec2;
         for jj = 1:nVec3
-
-            SC,dist,lags,N,minSC,W_sum,FC,missingROIs = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
-            lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay
-            solverStruct = setup(numThreads,nWindows,tWindows;delays=delays,mode=mode,plasticity=plasticity)
             solverStruct.nP.lags = dist./c_vec[jj]
             solverStruct.nP.lags[solverStruct.nP.lags .> 0.0] = solverStruct.nP.lags[solverStruct.nP.lags .> 0.0] .+ constant_delay
             
