@@ -1,6 +1,6 @@
 using Distributed,SharedArrays
-if nprocs() < 10
-    addprocs(10)
+if nprocs() < 4
+    addprocs(4)
     println("Number of Workers = ", nworkers())
 end
 
@@ -47,7 +47,7 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
     for j = 1:nVec2;
         for jj = 1:nVec3
             c = 7000.
-            const SC,dist,lags,N,minSC,W_sum,FC,missingROIs = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
+            SC,dist,lags,N,minSC,W_sum,FC,missingROIs = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
             lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay
         
             solverStruct =

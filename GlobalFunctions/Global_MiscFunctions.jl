@@ -46,7 +46,9 @@ end
 
 function stim(t,i,stimNodes,Tstim,nWindow,stimOpt,stimWindow,stimStr)
     if i ∈ stimNodes && (Tstim[1] <t < Tstim[2]) && (stimOpt == "on" || stimOpt == "ON") && nWindow == stimWindow
+        
         return stimStr
+
     else 
         return 0.
     end
@@ -65,8 +67,8 @@ end
 
 
 function get_FC(BOLD)
-    step_i = 20
-    step_j = 150
+    step_i = 300
+    step_j = 300
     N = size(BOLD,1)
     counterT = 1
     for i = 1:step_i:size(BOLD,2)
