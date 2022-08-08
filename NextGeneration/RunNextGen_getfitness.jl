@@ -47,7 +47,7 @@ fitArrayStruct = Array{fitStruct}(undef,nVec1,nVec2,nVec3)
     for j = 1:nVec2;
         for jj = 1:nVec3
             c = 7000.
-            SC,dist,lags,N,minSC,W_sum,FC,missingROIs = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
+            global SC,dist,lags,N,minSC,W_sum,FC,missingROIs = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC)
             lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay
         
             solverStruct =
