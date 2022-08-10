@@ -3,14 +3,14 @@ include("./functions/NextGen_InitSetup.jl")
 
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
-nWindows = 10 #stimulation starts at window 10
+nWindows = 120 #stimulation starts at window 10
 tWindows = 60
 type_SC = "pauldata" #sizes -> [18, 64,140,246,503,673]
 size_SC = 140
 densitySC= 0.5
 delay_digits=5
 plasticity="on"
-mode="rest"  #(rest,stim or rest+stim)
+mode="rest+stim"  #(rest,stim or rest+stim)
 n_Runs=1
 nFC = 1
 nSC = 1
@@ -19,6 +19,9 @@ kappa = 0.0502
 delays = "on"
 multi_thread = "on"
 constant_delay = 0.002
+
+doFC = true
+
 if numThreads == 1
     global multi_thread = "off"
 end
@@ -56,7 +59,7 @@ print(time_per_second)
 meanFC,missingROI = get_mean_all_functional_data(;ROI=140,type="control")
 
 
-if lowercase(type_SC) == "pauldata" && plotdata =="true"
+if lowercase(type_SC) == "pauldata" && doFC == true
     modelFC = get_FC(BOLD.BOLD_rest)
     if mode == "rest+stim"
         modelFC_stim = get_FC(BOLD.BOLD_stim)
@@ -83,9 +86,12 @@ if lowercase(type_SC) == "pauldata" && plotdata =="true"
 
 end
 
-save("./saved_data/modelFC.jld","modelFC",modelFC)
-if mode == "rest+stim"
-save("./saved_data/modelFC_stim.jld","modelFC_stim",modelFC_stim)
+
+if doFC == true
+    save("./saved_data/modelFC.jld","modelFC",modelFC)
+    if mode == "rest+stim"
+    save("./saved_data/modelFC_stim.jld","modelFC_stim",modelFC_stim)
+    end
 end
 
 
