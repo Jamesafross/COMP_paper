@@ -67,7 +67,7 @@ end
 
 
 function get_FC(BOLD)
-    step_i = 300
+    step_i = 100
     step_j = 300
     N = size(BOLD,1)
     counterT = 1
