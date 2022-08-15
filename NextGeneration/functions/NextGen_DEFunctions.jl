@@ -5,8 +5,8 @@
 
 function dW(du,u,h,p,t)
     for i = 1:N
-        du[i+2N] = 0.1
-        du[i+3N] = 0.1
+        du[i+2N] = 0.0
+        du[i+3N] = 0.0
     end 
 end
 

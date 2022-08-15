@@ -46,34 +46,23 @@ function nextgen_model_windows_run(solverStruct)
         adpStops = collect(0.01:0.01:tWindows)
       
     
-        if lowercase(delays) == "on"
-            probDDE = nextgen
-        elseif lowercase(delays) == "off"
-            probDDE = nextgen_nodelay
-        end
+       
+        probDDE = nextgen
+
 
         if j == 1
-            if lowercase(delays) == "on"
-                p = hparams,solverStruct
-                alg = RKMil()
-                prob = SDDEProblem(probDDE,dW,solverStruct.IC.u0, h1, tspan, p)
-            elseif lowercase(opts.delays)=="off"
-                alg = BS3()
-                prob = ODEProblem(probDDE,solverStruct.IC.u0, tspan)
-            end
 
-            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops,saveat=0.01)
-        else
-            if lowercase(delays) == "on"
                 p = hparams,solverStruct
-                alg = RKMil()
-                prob = SDDEProblem(probDDE,dW,solverStruct.IC.u0, h2, tspan, p)
-            elseif lowercase(opts.delays)=="off"
-                alg = BS3()
-                prob = ODEProblem(probDDE,solverStruct.IC.u0, tspan)
-            end
+                alg = MethodOfSteps(BS3())
+                prob = DDEProblem(probDDE,solverStruct.IC.u0, h1, tspan, p)
+            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops)
+        else
+            p = hparams,solverStruct
+            alg = MethodOfSteps(BS3())
+            prob = DDEProblem(probDDE,solverStruct.IC.u0, h2, tspan, p)
+    
             tic1 = time()
-            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops,reltol=1e-3,abstol=1e-6)
+            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops)
             global timer.meanIntegrationTime += (time() - tic1)/(nWindows-1)
         end
         vE = sol[2N+1:3N,:]

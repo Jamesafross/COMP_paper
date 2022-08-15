@@ -16,6 +16,7 @@ function make_hist_mat2_threads!(h,W::Matrix{Float64},u::Vector{Float64},hparams
     @inbounds Threads.@threads for i = 1:N
             for j = 1:N
                 if lags[j,i] > 0
+                  
                     WHistMat[j,i] = W[j,i]*h(hparams,t-lags[j,i]; idxs=i)
                 else
                     WHistMat[j,i] = W[j,i]*u[i]
