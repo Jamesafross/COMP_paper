@@ -33,7 +33,7 @@ function get_paul_data_all(;nSC=1,nFC=1,type="control",ROI=140)
 end
     
     
-function get_stuct_data(;n=1,ROI=140,mean=true)
+function get_stuct_data(;n=1,ROI=140,mean=false)
 
     if ROI in [18,64,140,246,503,673] 
         HOMEDIR = homedir()
@@ -58,8 +58,8 @@ function get_stuct_data(;n=1,ROI=140,mean=true)
             end
         else
             SC=zeros(ROI,ROI)
-            for i = 1:numMats
-                SC[:,:] += load("$STRUCTDIR/$(StructMats[i])","$(split(StructMats[i],".")[1])")/numMats
+            for i = 1:numMats-1
+                SC[:,:] += load("$STRUCTDIR/$(StructMats[i])","$(split(StructMats[i],".")[1])")/(numMats-1)
                 SC = log.(SC)
                 SC[SC.==-Inf] .= 0
 
