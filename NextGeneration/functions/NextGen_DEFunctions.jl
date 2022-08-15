@@ -3,6 +3,13 @@
 # solver                        #
 #################################
 
+function dW(du,u,h,p,t)
+    for i = 1:N
+        du[i+2N] = 0.1
+        du[i+3N] = 0.1
+    end 
+end
+
   function nextgen_threads(du,u,h,p,t)
     hparams,solverStruct = p
     @unpack NGp,nP,bP,IC,κS,wS,stimOpts,runOpts,solverOpts,runPars,adaptPars,nRuns,timer = solverStruct

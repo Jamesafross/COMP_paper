@@ -23,7 +23,7 @@ function setup(nWindows,tWindows,nTrials,nP;parallel="off",delays="on",plasticit
    adapt="off"
    start_adapt=5
    LR=0.01
-   if lowercase(plasticity) == "on"
+   if lowercase(plasticity) == "on" && nWindows > 5
       nSave = Int((nWindows-(start_adapt-1))*10*tWindows) + 2
    else 
       nSave = 2
@@ -62,8 +62,11 @@ function setup(nWindows,tWindows,nTrials,nP;parallel="off",delays="on",plasticit
 
    #initialise array for saving synaptic weights
    wS =  weightsSave(zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),1)
-
-   IC =  init(rand(3N))
+   if ISP == "off"
+      IC =  init(rand(3N))
+   else
+      IC = init(rand(4N))
+   end
    bP = balloonModelParameters()
 
    

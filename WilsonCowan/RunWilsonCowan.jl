@@ -1,17 +1,17 @@
 include("functions/WC_InitSetup.jl")
 
 parallel = "off"
-tWindows = 300
-nWindows = 6
+tWindows = 200
+nWindows = 10
 nTrials = 1
 type_SC = "paulData"
-size_SC =20
+size_SC =140
 densitySC=0.3
 delay_digits=10
 plasticityOpt="off"
 mode="rest"
 c = 13000
-constant_delay = 0.005
+constant_delay = 0.002
 delays = "on"
 ISP = "off"
 plotdata = true
@@ -25,7 +25,11 @@ etaVec = LinRange(0.19,0.22,nVec2)
 
 fitVec = zeros(nVec1,nVec2)
 
-global WCp = WCparams(Pext = 0.3,η=0.2)
+if ISP == "off" 
+    global WCp = WCparams(Pext = 0.302,η=0.16)
+else
+    global WCp = WCparamsISP(Pext = 0.302,η=0.15)
+end
 SC,dist,lags,N,minSC,W_sum,FC_Array = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC,normalise=normaliseSC)
 lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay
 W = zeros(N,N)
@@ -36,8 +40,10 @@ BOLD_TRIALS[:,:,:] = WC_run_trials()
 
 modelFC = getModelFC(BOLD_TRIALS,nTrials) 
 FC_fit_to_data_mean = zeros(size(modelFC,3))
+meanFC,missingROI = get_mean_all_functional_data(;ROI=140,type="control")
+
 for j = 1:size(modelFC,3)
-    FC_fit_to_data_mean[j] = fit_r(modelFC[:,:,j],mean(FC_Array[:,:,:],dims=3)[:,:])
+    FC_fit_to_data_mean[j] = fit_r(modelFC[:,:,j],meanFC)
 end
 
 
@@ -51,7 +57,7 @@ print(time_per_second)
 
 
 
-
+println(maximum(FC_fit_to_data_mean))
 plot(FC_fit_to_data_mean)
 
 

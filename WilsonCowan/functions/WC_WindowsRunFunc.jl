@@ -17,7 +17,13 @@ function wilsoncowan_windows_run()
        
         println("working on window ",j)
         if j == 1
-            solverStruct.IC.u0 = 0.1rand(3N)
+            if ISP == "off"
+                solverStruct.IC.u0 = 0.1rand(3N)
+            else
+                solverStruct.IC.u0 = 0.1rand(4N)
+                solverStruct.IC.u0[2N+1:3N] .= -2.5
+            end
+
             hparams = IC.u0
         else
             IC.u0 = sol[:,end]
@@ -41,10 +47,18 @@ function wilsoncowan_windows_run()
         
        
         p = hparams
-        if j == 1
-            prob = SDDEProblem(WC, dW,IC.u0, h1, tspan, p)
+        if ISP == "off"
+            if j == 1
+                prob = SDDEProblem(WC, dW,IC.u0, h1, tspan, p)
+            else
+                prob = SDDEProblem(WC, dW,IC.u0, h2, tspan, p)
+            end
         else
-            prob = SDDEProblem(WC, dW,IC.u0, h2, tspan, p)
+            if j == 1
+                prob = SDDEProblem(WC_ISP, dW_ISP,IC.u0, h1, tspan, p)
+            else
+                prob = SDDEProblem(WC_ISP, dW_ISP,IC.u0, h2, tspan, p)
+            end
         end
         @time global sol = solve(prob,RKMil(),maxiters = 1e20)
        
