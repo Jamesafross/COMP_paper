@@ -55,14 +55,14 @@ function nextgen_model_windows_run(solverStruct)
                 p = hparams,solverStruct
                 alg = MethodOfSteps(BS3())
                 prob = DDEProblem(probDDE,solverStruct.IC.u0, h1, tspan, p)
-            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops)
+            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops,saveat=0.005)
         else
             p = hparams,solverStruct
             alg = MethodOfSteps(BS3())
             prob = DDEProblem(probDDE,solverStruct.IC.u0, h2, tspan, p)
     
             tic1 = time()
-            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops)
+            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops,saveat=0.005)
             global timer.meanIntegrationTime += (time() - tic1)/(nWindows-1)
         end
         vE = sol[2N+1:3N,:]
