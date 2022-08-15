@@ -33,7 +33,7 @@ function get_paul_data_all(;nSC=1,nFC=1,type="control",ROI=140)
 end
     
     
-function get_stuct_data(;n=1,ROI=140)
+function get_stuct_data(;n=1,ROI=140,mean=true)
 
     if ROI in [18,64,140,246,503,673] 
         HOMEDIR = homedir()
@@ -42,18 +42,31 @@ function get_stuct_data(;n=1,ROI=140)
         STRUCTDIR="$DATADIR/Structural/$ROIDIR"
         StructMats = readdir(STRUCTDIR)
         numMats = size(StructMats,1)
-        if n > numMats
-            @error "There are only $numMats structural matrices in this directory. Please choose n < 5"
+        if mean == false
+            if n > numMats
+                @error "There are only $numMats structural matrices in this directory. Please choose n < 5"
+            else
+                print()
+                SC = load("$STRUCTDIR/$(StructMats[n])","$(split(StructMats[n],".")[1])")
+
+                SC = log.(SC)
+                SC[SC.==-Inf] .= 0
+
+                SC .= SC./maximum(SC)
+
+                return SC
+            end
         else
-            print()
-            SC = load("$STRUCTDIR/$(StructMats[n])","$(split(StructMats[n],".")[1])")
+            SC=zeros(ROI,ROI)
+            for i = 1:numMats
+                SC[:,:] += load("$STRUCTDIR/$(StructMats[i])","$(split(StructMats[i],".")[1])")/numMats
+                SC = log.(SC)
+                SC[SC.==-Inf] .= 0
 
-            SC = log.(SC)
-            SC[SC.==-Inf] .= 0
+                SC .= SC./maximum(SC)
 
-            SC .= SC./maximum(SC)
-
-            return SC
+                return SC
+            end
         end
     else
         @error "no such ROI size, choose an ROI in [18,64,140,246,503,673]"
