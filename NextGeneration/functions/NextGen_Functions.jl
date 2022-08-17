@@ -48,10 +48,10 @@ function adapt_local_func(h,hparams,t,κS,NGp,rE,rI,i,N,c;type = "lim")
         κSEIv[i] = (κSEIv[i] + c*rI*(rE - h(hparams,t-1.0;idxs = i)))
         κSIIv[i] = (κSIIv[i] + c*rI*(rI - h(hparams,t-1.0;idxs = i+N)))
         
-        limEE = 0.2
-        limEI = 0.2
-        limIE = 0.2
-        limII = 0.2
+        limEE = 0.5
+        limEI = 0.5
+        limIE = 0.5
+        limII = 0.5
 
         if type == "lim"
             if κSEEv[i]  > κSEE + limEE

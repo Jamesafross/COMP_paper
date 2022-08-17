@@ -3,8 +3,8 @@ include("./functions/NextGen_InitSetup.jl")
 
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
-nWindows = 6 #stimulation starts at window 10
-tWindows =100
+nWindows = 20 #stimulation starts at window 10
+tWindows =60
 type_SC = "pauldata" #sizes -> [18, 64,140,246,503,673]
 size_SC = 140
 densitySC= 0.5
@@ -60,39 +60,42 @@ meanFC,missingROI = get_mean_all_functional_data(;ROI=140,type="control")
 
 
 if lowercase(type_SC) == "pauldata" && doFC == true
-    modelFC = get_FC(BOLD.BOLD_rest)
-    if mode == "rest+stim"
+
+    if mode == "rest+stim" 
+        modelFC = get_FC(BOLD.BOLD_rest)
         modelFC_stim = get_FC(BOLD.BOLD_stim)
+        save("./saved_data/modelFC.jld","modelFC",modelFC)
+        save("./saved_data/modelFC_stim.jld","modelFC_stim",modelFC_stim)
+    elseif mode == "rest"
+        modelFC = get_FC(BOLD.BOLD_rest)
+        save("./saved_data/modelFC.jld","modelFC",modelFC)
+    elseif mode == "stim"
+        modelFC_stim = get_FC(BOLD.BOLD_stim)
+        save("./saved_data/modelFC_stim.jld","modelFC_stim",modelFC_stim)
     end
-    if size(missingROI,1) > 0
-        keepElements = ones(N)
-        for i in missingROI
-            keepElements .= collect(1:N) != i
+ 
+    if mode == "rest" || mode == "rest+stim"
+        if size(missingROI,1) > 0
+            keepElements = ones(N)
+            for i in missingROI
+                keepElements .= collect(1:N) != i
+            end
+
+            modelFC = modelFC[keepElements,keepElements]
+        end
+        
+        FC_fit_to_data_mean = zeros(size(modelFC,3))
+
+        for i = 1:size(modelFC,3)
+            FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i].^2,meanFC.^2)
         end
 
-        modelFC = modelFC[keepElements,keepElements]
+
+        print("best fitness = ", maximum(FC_fit_to_data_mean))
     end
-
-
-    FC_fit_to_data_mean = zeros(size(modelFC,3))
-
-    for i = 1:size(modelFC,3)
-        FC_fit_to_data_mean[i] = fit_r(modelFC[:,:,i].^2,meanFC.^2)
-    end
-
-
-    print("best fitness = ", maximum(FC_fit_to_data_mean))
-
 
 end
 
-
-if doFC == true
-    save("./saved_data/modelFC.jld","modelFC",modelFC)
-    if mode == "rest+stim"
-    save("./saved_data/modelFC_stim.jld","modelFC_stim",modelFC_stim)
-    end
-end
 
 
 

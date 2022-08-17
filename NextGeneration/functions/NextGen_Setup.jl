@@ -14,7 +14,7 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticity="on",mode="re
 
     stimOpt = "off"
     stimNodes = [39]
-    Tstim = [90,100]
+    Tstim = [10,20]
     stimStr = -5.
     stimWindow = 10
     adapt = "off"
@@ -43,7 +43,7 @@ function setup(numThreads,nWindows,tWindows;delays="on",plasticity="on",mode="re
     nP = NetworkParameters(W, dist,lags, N, minSC,W_sum)
     bP = balloonModelParameters()
 
-    LR = 0.0001 # learning rate adaptation
+    LR = 0.0002 # learning rate adaptation
     IC = init(init0)
     κS = weights(κSEEv, κSIEv, κSEIv, κSIIv, κSUM )
     wS = weightSave(zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),1)
