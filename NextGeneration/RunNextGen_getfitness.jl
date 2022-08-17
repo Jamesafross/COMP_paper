@@ -1,6 +1,6 @@
 using Distributed,SharedArrays
-if nprocs() < 4
-    addprocs(4)
+if nprocs() < 20
+    addprocs(20)
     println("Number of Workers = ", nworkers())
 end
 
@@ -29,11 +29,11 @@ end
 
 
 
-nVec1 = 40
+nVec1 = 20
 nVec2 = 20
 nVec3 = 10
-eta_0E_vec = SharedArray(Array(LinRange(-13.5,-15.1,nVec1)))
-kappa_vec = SharedArray(Array(LinRange(0.01,0.06,nVec2)))
+eta_0E_vec = SharedArray(Array(LinRange(-15,-15.6,nVec1)))
+kappa_vec = SharedArray(Array(LinRange(0.04,0.06,nVec2)))
 c_vec = SharedArray(Array(LinRange(5000,14000,nVec3)))
 
 fitArray = SharedArray(zeros(nVec1,nVec2,nVec3))
