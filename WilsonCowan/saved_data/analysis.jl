@@ -13,13 +13,13 @@ function get_name_stim(MAT)
 end
 
 
-FCMAT_stim = zeros(140,140,39,25)
+FCMAT_stim = zeros(140,140,65,25)
 for i = 1:25
     FCMAT_stim[:,:,:,i] = load("$workdir/$(FC_MATS_STIM[i])",get_name_stim(FC_MATS_STIM[i]))
 end
 
 
-meanFCMAT_stim = mean(FCMAT_stim[:,:,10:3:end,:].^2,dims=4)
+meanFCMAT_stim = mean(FCMAT_stim[:,:,7:3:end,:].^2,dims=4)
 
 
 #include("/home/pmxjr3/Cyril_Results/Level_3/conver_to_jld.jl")
@@ -27,7 +27,7 @@ meanFCMAT_stim = mean(FCMAT_stim[:,:,10:3:end,:].^2,dims=4)
 
 #R2_save[:]
 mins = ["00","05","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95","100"]
-workdir = "$HOMEDIR/COMP_paper/NextGeneration/saved_data"
+workdir = "$HOMEDIR/COMP_paper/WilsonCowan/saved_data"
 for i = 1:size(meanFCMAT_stim,3)
 
     open("$workdir/text_file_data/modelR2_min_$(mins[i]).txt", "w") do io

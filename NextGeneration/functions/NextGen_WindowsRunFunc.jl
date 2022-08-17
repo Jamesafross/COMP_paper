@@ -53,16 +53,16 @@ function nextgen_model_windows_run(solverStruct)
         if j == 1
 
                 p = hparams,solverStruct
-                alg = EM()
+                alg = RKMil()
                 prob = SDDEProblem(probDDE,dW,solverStruct.IC.u0, h1, tspan, p)
-            global sol = solve(prob,alg,maxiters = 1e20,dt=0.001,tstops=adpStops)
+            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops)
         else
             p = hparams,solverStruct
-            alg = EM()
+            alg = RKMil()
             prob = SDDEProblem(probDDE,dW,solverStruct.IC.u0, h2, tspan, p)
     
             tic1 = time()
-            global sol = solve(prob,alg,maxiters = 1e20,dt=0.001,tstops=adpStops)
+            global sol = solve(prob,alg,maxiters = 1e20,tstops=adpStops)
             global timer.meanIntegrationTime += (time() - tic1)/(nWindows-1)
         end
         vE = sol[2N+1:3N,:]
