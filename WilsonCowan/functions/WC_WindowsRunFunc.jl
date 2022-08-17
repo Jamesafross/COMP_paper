@@ -7,7 +7,7 @@ function wilsoncowan_windows_run()
    @unpack LearningRate,windowStart,tP,HIST = adaptPars
   
   
-    BOLD_saveat = collect(0:1.6:tWindows)
+    BOLD_saveat = collect(0:1.0:tWindows)
     size_out = length(BOLD_saveat)
     BOLD_out = zeros(N,size_out,nWindows)
     

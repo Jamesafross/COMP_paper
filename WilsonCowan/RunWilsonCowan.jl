@@ -1,15 +1,15 @@
 include("functions/WC_InitSetup.jl")
 
 parallel = "off"
-tWindows = 200
-nWindows = 10
+tWindows = 60
+nWindows = 110
 nTrials = 1
 type_SC = "paulData"
 size_SC =140
 densitySC=0.3
 delay_digits=10
-plasticityOpt="off"
-mode="rest"
+plasticityOpt="on"
+mode="stim"
 c = 13000
 constant_delay = 0.001
 delays = "on"
@@ -26,7 +26,7 @@ etaVec = LinRange(0.19,0.22,nVec2)
 fitVec = zeros(nVec1,nVec2)
 
 if ISP == "off" 
-    global WCp = WCparams(Pext = 0.302,η=0.16)
+    global WCp = WCparams(Pext = 0.302,η=0.15)
 else
     global WCp = WCparamsISP(Pext = 0.302,η=0.15)
 end
@@ -47,6 +47,7 @@ for j = 1:size(modelFC,3)
 end
 
 
+save("$WORKDIR/saved_data/modelFC_stim.jld","modelFC_stim",modelFC)
 
 time_per_second = solverStruct.timer.meanIntegrationTime/tWindows
 print(time_per_second)

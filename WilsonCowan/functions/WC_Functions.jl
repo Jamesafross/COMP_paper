@@ -48,10 +48,10 @@ function adapt_local_func(h,hparams,t,weights,WCp,rE,rI,i,N,c;type = "lim")
     cEIv[i] = (cEIv[i] + c*rI*(rE - h(hparams,t-1.0;idxs = i)))
     cIIv[i] = (cIIv[i] + c*rI*(rI - h(hparams,t-1.0;idxs = i+N)))
     
-    limEE = 0.2
-    limEI = 0.2
-    limIE = 0.2
-    limII = 0.2
+    limEE = 0.4
+    limEI = 0.4
+    limIE = 0.4
+    limII = 0.4
 
     if type == "lim"
         if cEEv[i]  > cEE + limEE

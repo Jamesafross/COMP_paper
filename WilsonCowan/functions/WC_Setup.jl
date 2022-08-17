@@ -13,16 +13,16 @@ function setup(nWindows,tWindows,nTrials,nP;parallel="off",delays="on",plasticit
    end
    
    #set stimlation options
-   stimOpt = "off"
-   stimStr = -1.
-   stimWindow = 2
+   stimOpt = "on"
+   stimStr = -10.
+   stimWindow = 10
    stimNodes = [39]
    Tstim = [30,60]
 
    #set plasticity options
    adapt="off"
    start_adapt=5
-   LR=0.01
+   LR=0.005
    if lowercase(plasticity) == "on" && nWindows > 5
       nSave = Int((nWindows-(start_adapt-1))*10*tWindows) + 2
    else 
@@ -47,7 +47,7 @@ function setup(nWindows,tWindows,nTrials,nP;parallel="off",delays="on",plasticit
    weights = Weights(cEEv,cIEv,cEIv,cIIv,cSUM)
 
    #initialise BOLD output array
-   BOLD_saveat = collect(0:1.6:tWindows)
+   BOLD_saveat = collect(0:1.0:tWindows)
    size_out = length(BOLD_saveat)
    BOLD_TRIALS = zeros(N,nWindows*size_out,nTrials)
    if parallel == "on"

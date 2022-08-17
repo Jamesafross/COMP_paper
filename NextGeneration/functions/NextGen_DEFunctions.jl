@@ -5,8 +5,8 @@
 
 function dW(du,u,h,p,t)
     for i = 1:N
-        du[i+2N] = 0.0
-        du[i+3N] = 0.0
+        du[i+2N] = 0.3
+        du[i+3N] = 0.3
     end 
 end
 
@@ -78,6 +78,7 @@ end
         du[i+6N] = αEI * (-gEI + κSEIv[i] * rI)
         #gII
         du[i+7N] = αII * (-gII + κSIIv[i] * rI)
+
   
   
       end

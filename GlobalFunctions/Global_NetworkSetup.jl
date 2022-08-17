@@ -58,8 +58,8 @@ function get_stuct_data(;n=1,ROI=140,mean=false)
             end
         else
             SC=zeros(ROI,ROI)
-            for i = 1:numMats-1
-                SC[:,:] += load("$STRUCTDIR/$(StructMats[i])","$(split(StructMats[i],".")[1])")/(numMats-1)
+            for i = 1:3
+                SC[:,:] += load("$STRUCTDIR/$(StructMats[i])","$(split(StructMats[i],".")[1])")/(3)
                 SC = log.(SC)
                 SC[SC.==-Inf] .= 0
 
