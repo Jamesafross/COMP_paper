@@ -15,21 +15,18 @@ function get_name_stim(MAT)
     d = findfirst(isequal('_'),MAT)
     return MAT[1:d+4]
 end
-FCMAT_nostim = zeros(140,140,68,25)
-for i = 1:25
-    FCMAT_nostim[:,:,:,i] = load("$workdir/$(FC_MATS_NOSTIM[i])",get_name(FC_MATS_NOSTIM[i]))
-end
 
-FCMAT_stim = zeros(140,140,68,25)
+
+FCMAT_stim = zeros(140,140,65,25)
 for i = 1:25
     FCMAT_stim[:,:,:,i] = load("$workdir/$(FC_MATS_STIM[i])",get_name_stim(FC_MATS_STIM[i]))
 end
 
-meanFCMAT_nostim = mean(FCMAT_nostim[:,:,10:3:end,:].^2,dims=4)
+
 meanFCMAT_stim = mean(FCMAT_stim[:,:,10:3:end,:].^2,dims=4)
 
 
-include("/home/pmxjr3/Cyril_Results/Level_3/conver_to_jld.jl")
+include("/home/james/Cyril_Results/Level_3/conver_to_jld.jl")
 
 
 R2_save[:]
