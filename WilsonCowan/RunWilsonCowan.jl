@@ -1,8 +1,8 @@
 include("functions/WC_InitSetup.jl")
 
 parallel = "off"
-tWindows = 60
-nWindows = 110
+tWindows = 1000
+nWindows = 1
 nTrials = 1
 type_SC = "paulData"
 size_SC =140
@@ -11,9 +11,9 @@ delay_digits=10
 plasticityOpt="on"
 mode="stim"
 c = 13000
-constant_delay = 0.001
+constant_delay = 0.005
 delays = "on"
-ISP = "off"
+ISP = "on"
 plotdata = true
 normaliseSC = true
 
@@ -28,7 +28,7 @@ fitVec = zeros(nVec1,nVec2)
 if ISP == "off" 
     global WCp = WCparams(Pext = 0.302,η=0.15)
 else
-    global WCp = WCparamsISP(Pext = 0.302,η=0.15)
+    global WCp = WCparamsISP(Pext = 0.25,η=0.1,σ = 0.1, ρ=0.15)
 end
 SC,dist,lags,N,minSC,W_sum,FC_Array = networksetup(c;digits=delay_digits,type_SC=type_SC,N=size_SC,density=densitySC,normalise=normaliseSC)
 lags[lags .> 0.0] = lags[lags .> 0.0] .+ constant_delay

@@ -63,9 +63,9 @@ function setup(nWindows,tWindows,nTrials,nP;parallel="off",delays="on",plasticit
    #initialise array for saving synaptic weights
    wS =  weightsSave(zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),zeros(N,nSave),1)
    if ISP == "off"
-      IC =  init(rand(3N))
+      IC =  init(0.001rand(3N))
    else
-      IC = init(rand(4N))
+      IC = init(0.001rand(4N))
    end
    bP = balloonModelParameters()
 

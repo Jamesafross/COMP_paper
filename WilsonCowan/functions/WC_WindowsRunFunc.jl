@@ -12,6 +12,11 @@ function wilsoncowan_windows_run()
     BOLD_out = zeros(N,size_out,nWindows)
     
     for j = 1:nWindows
+        if j < 5
+            global ISPswitch = 0.
+        else
+            global ISPswitch = 1.
+        end
 
         global nWindow = j
        
@@ -60,7 +65,7 @@ function wilsoncowan_windows_run()
                 prob = SDDEProblem(WC_ISP, dW_ISP,IC.u0, h2, tspan, p)
             end
         end
-        @time global sol = solve(prob,RKMil(),maxiters = 1e20)
+        @time global sol = solve(prob,EM(),dt=0.002,maxiters = 1e20)
        
         
 
