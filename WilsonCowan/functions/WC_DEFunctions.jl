@@ -81,8 +81,8 @@ function WC_ISP(du,u,h,p,t)
         #println(d)
         E = u[i]
         I = u[i+N]
-        du[i] = (1/τE)*(-E + f(cEE*E  + u[i+2*N]*I + u[i+3N]+Pext + (η)*d[i],β,θE))
-        du[i+N] =(1/τI)*( -I + f(cEI*E + cII*I+u[i+3N],β,θI) )
+        du[i] = (1/τE)*(-E + f(cEE*E  + u[i+2*N]*I +Pext + 0.01*(η)*d[i],β,θE))
+        du[i+N] =(1/τI)*( -I + f(cEI*E + cII*I,β,θI) )
         du[i+2N] = (1/τISP)*I*(E - ρ)
         du[i+3N] = (-1/τx)*u[i+3N]
     end

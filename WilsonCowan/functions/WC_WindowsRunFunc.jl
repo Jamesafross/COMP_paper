@@ -60,12 +60,13 @@ function wilsoncowan_windows_run()
             end
         else
             if j == 1
-                prob = SDDEProblem(WC_ISP, dW_ISP,IC.u0, h1, tspan, p)
+                prob = DDEProblem(WC_ISP,IC.u0, h1, tspan, p)
             else
-                prob = SDDEProblem(WC_ISP, dW_ISP,IC.u0, h2, tspan, p)
+                prob = DDEProblem(WC_ISP,IC.u0, h2, tspan, p)
             end
         end
-        @time global sol = solve(prob,EM(),dt=0.002,maxiters = 1e20)
+        
+        @time global sol = solve(prob,MethodOfSteps(RK4()),maxiters = 1e20)
        
         
 
