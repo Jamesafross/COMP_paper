@@ -3,8 +3,8 @@ include("./functions/NextGen_InitSetup.jl")
 
 
 println("Base Number of Threads: ",numThreads," | BLAS number of Threads: ", BLASThreads,".")
-nWindows = 110 #stimulation starts at window 10
-tWindows =60
+nWindows = 20 #stimulation starts at window 10
+tWindows =100
 type_SC = "pauldata" #sizes -> [18, 64,140,246,503,673]
 size_SC = 140
 densitySC= 0.5

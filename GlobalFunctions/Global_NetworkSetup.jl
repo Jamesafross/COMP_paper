@@ -181,3 +181,12 @@ function get_mean_all_functional_data(;ROI=140,type="control")
 
 
 end
+
+function get_HCP_mat()
+    file = matopen("/Users/james/abeysuriya_wc_isp/SC.mat")
+    SC = read(file, "SC") # note that this does NOT introduce a variable ``varname`` into scope
+    close(file)
+
+    N = size(SC,1)
+    return SC,N
+end
